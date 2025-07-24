@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phuc Nguyen</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <header>
+            <img src="avatar.jpg" alt="Phuc Nguyen" class="avatar">
+            <h1 class="name">Phuc Nguyen</h1>
+            <p class="subtitle">High school dropout. Research engineer at Hugging Face.</p>
+            <p class="title">Discord: neuralink</p>
+        </header>
+
+        <section class="about">
+            <p>I'm currently a research engineer at Hugging Face, where I'm a maintainer of the distributed training nanotron library and involved in various research reproduction efforts on the Hugging Face science team.</p>
+            <p>I maintain a <a href="https://x.com/xariusrke/status/1935978626698371096">life-long learning progress thread</a> where I've shared my study notes over the past two years (<a href="https://x.com/xariusrke/status/1730512629284930018">3D parallelism</a>, <a href="https://x.com/xariusrke/status/1862237702118150363">FP8 research</a>, <a href="https://x.com/xariusrke/status/1805963548109238557">Infini-Attention</a>, <a href="https://x.com/xariusrke/status/1935999178288545832">Expert Parallelism</a>, <a href="https://x.com/xariusrke/status/1894461976606093567">DoMiNo</a>).</p>
+            <p>Before Hugging Face, I designed <a href="https://x.com/xariusrke/status/1613295335295823873">a study plan</a> that spanned across <a href="https://x.com/xariusrke/status/1617054608496693249">physics</a>, biology, and <a href="https://x.com/xariusrke/status/1621403313651728386">neuroscience</a>... and then consistently studied from 3:30 AM to 3:30 PM, then went to sleep from 5:20 PM to 3:00 AM and repeated for 2 years.</p>
+        </section>
+
+        <section class="projects">
+            <h2>Selected Work</h2>
+            <article class="project">
+                <h3><a href="https://x.com/xariusrke/status/1826669126955278401">Stable FP8 pretraining recipe for Transformer</a></h3>
+                <p>Found two stable FP8 pretraining recipes that pretrained a LLaMA 2 architecture in FP8 for both forward and backward passes, as well as both momentums (50% memory reduction), while matching the standard BF16 mixed-precision baseline after 100B tokens.</p>
+            </article>
+            <article class="project">
+                <h3><a href="https://huggingface.co/spaces/nanotron/ultrascale-playbook?section=high-level_overview">The Ultra-Scale Playbook: Training LLMs on GPU Clusters</a></h3>
+                <p>Nouamane Tazi, Ferdinand Mom, Haojun Zhao, <u>Phuc Nguyen</u>, Mohamed Mekkouri, Leandro Werra, Thomas Wolf.</p>
+            </article>
+            <article class="project">
+                <h3><a href="https://github.com/huggingface/nanotron">nanotron - pretraining make simple</a> ⭐ 2.1k</h3>
+                <p>A 3D parallelism distributed training library used for smollm and fineweb.</p>
+            </article>
+            <article class="project">
+                <h3><a href="https://github.com/xrsrke/pipegoose">pipegoose - 3D parallelism</a></h3>
+                <p>Built a 3D parallelism library from scratch with ZeRO-1.</p>
+            </article>
+
+            <article class="project">
+                <h3><a href="https://huggingface.co/blog/infini-attention">A failed experiment: Infini-Attention, and why we should keep trying?</a></h3>
+                <p>Research reproduction of the Infini-Attention paper. TLDR: Infini-Attention's performance gets worse as we increase the number of times we compress the memory. To the best of our knowledge, ring attention, YaRN, and rope scaling are still the best ways for extending a pretrained model to a longer context length.</p>
+            </article>
+        </section>
+
+        <section class="projects">
+            <h2>Selected Study Notes</h2>
+            <article class="project">
+                <h3><a href="https://projectfoundation.notion.site/Megatron-LM-OSLO-DeepSped-and-FSDP-s-implementation-details-dbfb2bacc65d42cda0a0633ab1bdc994">A complete breakdown of the implementation details of Megatron-LM, torchgpipe, and OSLO codebases</a></h3>
+                <p>3D parallelism, Sequence Parallelism, ZeRO-1, Mixture of Experts, FSDP, and other engineering optimizations in popular codebases.</p>
+            </article>
+        </section>
+
+        <section class="talks">
+            <h2>Talks</h2>
+            <article class="project">
+                <h3><a href="https://x.com/xariusrke/status/1862237702118150363">Gave an oral presentation at France's Jean Zay supercomputer facility, part of the France's National Scientific Research Center (CNRS)</a></h3>
+            </article>
+        </section>
+
+        <section class="contact">
+            <h2>Get in Touch</h2>
+            <p>
+                <a href="https://x.com/xariusrke">Twitter</a> • 
+                <a href="https://github.com/xrsrke">GitHub</a> • 
+                <a href="https://discordapp.com/users/930102195330900009">Discord</a> • 
+                <a href="https://www.twitch.tv/xrsrke">Twitch</a> • 
+                <a href="mailto:phucnh791@gmail.com">Email</a> • 
+                <a href="https.linkedin.com/in/phuc-nguyen-418a4219a/">LinkedIn</a> • 
+                <a href="https://docs.google.com/document/d/1pIbeiAnqsSY9sEtQRHjGx_1t2W_AH8Cs4OcUerA2rPY/edit?tab=t.0">CV</a>
+            </p>
+        </section>
+    </main>
+</body>
+</html>
