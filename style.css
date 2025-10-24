@@ -25,6 +25,15 @@ body {
     margin-bottom: 16px;
 }
 
+.inline-logo {
+    height: 1em;
+    width: 1em;
+    vertical-align: middle;
+    display: inline-block;
+    margin: 0 2px;
+    border-radius: 3px;
+}
+
 h1 {
     font-size: 28px;
     font-weight: 600;
