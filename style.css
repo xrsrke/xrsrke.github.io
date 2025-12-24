@@ -216,40 +216,40 @@ code {
     .container {
         padding: 24px 16px;
     }
-    
+
     h1 {
         font-size: 24px;
     }
-    
+
     h2 {
         margin: 24px 0 12px 0;
     }
-    
+
     .header-top {
         flex-direction: column;
         align-items: flex-start;
     }
-    
+
     .avatar {
         margin-bottom: 16px;
     }
-    
+
     .nav-links {
         margin-bottom: 0;
         align-self: flex-end;
         margin-top: -48px;
     }
-    
+
     .person {
         margin-bottom: 16px;
         padding-bottom: 12px;
     }
-    
+
     .note {
         margin-top: 32px;
         padding: 16px;
     }
-    
+
     .tooltip-text {
         width: 240px;
         top: auto;
@@ -260,7 +260,7 @@ code {
         font-size: 13px;
         text-align: center;
     }
-    
+
     .tooltip-text::after {
         top: 100%;
         right: auto;
@@ -269,8 +269,20 @@ code {
         margin-top: 0;
         border-color: #333 transparent transparent transparent;
     }
-    
+
     .tooltip:hover .tooltip-text {
         transform: translateY(-5px);
     }
+}
+
+@media (max-width: 900px) {
+    div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Table of contents styling */
+.about ul li a:hover {
+    color: #000 !important;
+    text-decoration: underline !important;
 }

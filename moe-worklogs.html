@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building 10T tokens/month throughput infrastructure for MoE training - Phuc Nguyen</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <header>
+            <div class="header-top">
+                <a href="index.html" style="text-decoration: none;">
+                    <img src="avatar.jpg" alt="Phuc Nguyen" class="avatar">
+                </a>
+                <nav class="nav-links">
+                    <a href="index.html">Home</a> •
+                    <a href="favorite-people.html">Favorite People</a> •
+                    <a href="favorite-reading.html">Favorite Reading</a>
+                </nav>
+            </div>
+            <h1 class="name">Building 10T tokens/month throughput infrastructure for MoE training</h1>
+            <p class="title">A worklog documenting the journey of scaling expert parallelism to achieve high-throughput pretraining</p>
+            <p style="font-size: 0.9em; color: #666; margin-top: 12px; font-style: italic;">For reference: Qwen3 30B A3B was trained on 36T tokens</p>
+        </header>
+
+        <section class="about">
+            <p style="font-size: 0.85em; color: #666;">Technical worklogs documenting the development of MoE pretraining infrastructure, optimization experiments, and scaling challenges.</p>
+        </section>
+
+        <section class="about">
+            <h2 style="font-size: 18px; font-weight: 500; margin-bottom: 16px;">Table of Contents</h2>
+            <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #e5e5e5;">
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li style="margin-bottom: 10px;"><a href="#nov-14" style="color: #1d1d1f; text-decoration: none; font-size: 0.9em;">November 14 - Scaling Expert Parallelism Linearly</a></li>
+                    <li style="margin-bottom: 10px;"><a href="#nov-18" style="color: #1d1d1f; text-decoration: none; font-size: 0.9em;">November 18 - Identifying the Next Bottleneck: CPU Launch Overhead</a></li>
+                    <li style="margin-bottom: 10px;"><a href="#nov-24" style="color: #1d1d1f; text-decoration: none; font-size: 0.9em;">November 24 - Achieving 10T Tokens/Month Throughput</a></li>
+                    <li style="margin-bottom: 10px;"><a href="#nov-25" style="color: #1d1d1f; text-decoration: none; font-size: 0.9em;">November 25 - Fixing Gradient Norm Explosion in MoE Training</a></li>
+                    <li style="margin-bottom: 10px;"><a href="#dec-2" style="color: #1d1d1f; text-decoration: none; font-size: 0.9em;">December 2 - Grad Norm Issue Due to torch._grouped_gemm Bug</a></li>
+                    <li style="margin-bottom: 10px;"><a href="#dec-5" style="color: #1d1d1f; text-decoration: none; font-size: 0.9em;">December 5 - Fused Kernel Rounding Mode Differences</a></li>
+                    <li style="margin-bottom: 0;"><a href="#dec-9" style="color: #1d1d1f; text-decoration: none; font-size: 0.9em;">December 9 - Achieving 15,057 TPS with Fused Kernel Optimizations</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="projects">
+            <h2>Worklogs</h2>
+
+            <article class="project" id="nov-14">
+                <h3>November 14 - Scaling Expert Parallelism Linearly</h3>
+                <p>Fixed critical issues to achieve near-linear scaling of expert parallelism across nodes.</p>
+
+                <p><strong>Problem 1: Intranode kernels scale poorly with expert parallelism</strong></p>
+                <p>Intranode kernels (especially <code>cached_notify_combine</code>) scale poorly with expert parallelism (EP). I mitigated this by tuning the number of SMs (<code>num_sms</code>) allocated to DeepEP.</p>
+
+                <p>Using the Nsight report for EP=2 and EP=4, the top-15 slowest kernels show that the DeepEP intranode kernels dominate the GPU time. The worst is: <code>deep_ep::intranode::cached_notify_combine(int)</code></p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0;">
+                    <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #e5e5e5;">
+                        <p style="margin-bottom: 12px; font-weight: 500; color: #1d1d1f; font-size: 0.9em;">EP=4 – Top 15 Kernels</p>
+                        <pre style="background-color: #fff; padding: 14px; border-radius: 6px; overflow-x: auto; border: 1px solid #e5e5e5; font-size: 0.75em; line-height: 1.6; margin: 0; color: #1d1d1f;"><code>void deep_ep::intranode::cached_notify_combine&lt;(int)4&gt; void **, int *,     54.306s  ( 38.1%)
+ncc!DevKernel_AllGather_RING_LL`ncc!DevKernelArgsStorage&lt; unsigned lon     17.169s  ( 12.1%)
+void deep_ep::intranode::dispatch&lt;(int)4, (int)768, (int)8192&gt; int4 *,      9.107s  (  6.4%)
+void deep_ep::intranode::combine&lt;__nv_bfloat16, (int)4, (int)768, (int      8.539s  (  6.0%)
+void at::native::indexFuncLargeIndex&lt;c10::BFloat16, long, unsigned int      4.289s  (  3.0%)
+void cutlass::device_kernel&lt;at::cuda::detail::enable_3x_kernel_for_sm1      3.930s  (  2.8%)
+void at::native::_scatter_gather_elementwise_kernel&lt;(int)128, (int)8,       3.583s  (  2.5%)
+cudnn_generated_fort_native_sdpa_sm100_flash_bprop_f16_knob_3i_128x128       2.811s  (  2.0%)
+ncc!DevKernel_ReduceScatter_Sum_T32_RING_LL`ncc!DevKernelArgsStorage&lt;       2.559s  (  1.8%)
+void at::native::elementwise_kernel&lt;(int)128, (int)4, void at::native:      2.504s  (  1.8%)
+void at::native::&lt;unnamed&gt;::multi_tensor_apply_kernel&lt;at::native::&lt;unn      2.246s  (  1.6%)
+void deep_ep::intranode::cached_notify_dispatch&lt;(int)4&gt; const int *, i      2.226s  (  1.6%)
+void cutlass::device_kernel&lt;at::cuda::detail::enable_3x_kernel_for_sm1      2.045s  (  1.4%)
+void at::native::&lt;unnamed&gt;::vectorized_layer_norm_kernel&lt;c10::BFloat16       1.943s  (  1.4%)
+void cutlass::device_kernel&lt;at::cuda::detail::enable_3x_kernel_for_sm1      1.940s  (  1.4%)</code></pre>
+                    </div>
+
+                    <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #e5e5e5;">
+                        <p style="margin-bottom: 12px; font-weight: 500; color: #1d1d1f; font-size: 0.9em;">EP=2 – Top 15 Kernels</p>
+                        <pre style="background-color: #fff; padding: 14px; border-radius: 6px; overflow-x: auto; border: 1px solid #e5e5e5; font-size: 0.75em; line-height: 1.6; margin: 0; color: #1d1d1f;"><code>ncc!DevKernel_AllGather_RING_LL`ncc!DevKernelArgsStorage&lt; unsigned lon     31.187s  ( 30.5%)
+void deep_ep::intranode::cached_notify_combine&lt;(int)2&gt; void **, int *,     19.856s  ( 19.4%)
+ncc!DevKernel_ReduceScatter_Sum_T32_RING_LL`ncc!DevKernelArgsStorage&lt;       6.529s  (  6.4%)
+void deep_ep::intranode::combine&lt;__nv_bfloat16, (int)2, (int)768, (int      5.060s  (  5.0%)
+void deep_ep::intranode::dispatch&lt;(int)2, (int)768, (int)8192&gt; int4 *,      3.468s  (  3.4%)
+cudnn_generated_fort_native_sdpa_sm100_flash_bprop_f16_knob_3i_128x128       2.406s  (  2.4%)
+void at::native::elementwise_kernel&lt;(int)128, (int)4, void at::native:      2.064s  (  2.0%)
+void at::native::_scatter_gather_elementwise_kernel&lt;(int)128, (int)8,       1.843s  (  1.8%)
+void at::native::&lt;unnamed&gt;::multi_tensor_apply_kernel&lt;at::native::&lt;unn      1.776s  (  1.7%)
+void at::native::indexFuncLargeIndex&lt;c10::BFloat16, long, unsigned int      1.742s  (  1.7%)
+void cutlass::device_kernel&lt;at::cuda::detail::enable_3x_kernel_for_sm1      1.696s  (  1.7%)
+void at::native::&lt;unnamed&gt;::vectorized_layer_norm_kernel&lt;c10::BFloat16       1.681s  (  1.6%)
+cudnn_generated_fort_native_sdpa_sm100_flash_fprop_f16_knob_7_128x128x       1.602s  (  1.6%)
+void at::native::detail::chunk_cat_cuda_kernel&lt;float, c10::BFloat16&gt;::T      1.441s  (  1.4%)
+void deep_ep::intranode::cached_notify_dispatch&lt;(int)2&gt; const int *, i      1.397s  (  1.4%)</code></pre>
+                    </div>
+                </div>
+
+                <p style="margin-left: 1.5em;">
+                    <strong>EP = 4:</strong> <code>cached_notify_combine</code> = <strong>54.306 s</strong> (≈ <strong>38.1%</strong> of GPU time)<br>
+                    <strong>EP = 2:</strong> <code>cached_notify_combine</code> = <strong>19.856 s</strong> (≈ <strong>19.4%</strong> of GPU time)<br>
+                    <strong>Result:</strong> <strong>2.73× slowdown</strong> in that kernel when doubling expert parallelism.
+                </p>
+
+                <p>Other DeepEP intranode kernels also scale poorly:</p>
+                <p style="margin-left: 1.5em;">
+                    <code>dispatch&lt;int4&gt;</code>: <strong>9.107 s</strong> vs <code>dispatch&lt;int2&gt;</code>: <strong>3.468 s</strong> → <strong>2.63× slower</strong><br>
+                    <code>combine&lt;int4&gt;</code>: <strong>8.539 s</strong> vs <code>combine&lt;int2&gt;</code>: <strong>5.060 s</strong> → <strong>1.69× slower</strong>
+                </p>
+
+                <p>At the system level: <strong>EP=4 is 42.7% slower than EP=2</strong> (4624 vs 6599 tokens/sec).</p>
+
+                <p>From <a href="https://github.com/deepseek-ai/DeepEP/blob/92fe2deaec24bc92ebd9de276daa6ca9ed602ed4/csrc/kernels/intranode.cu#L613-L628" style="font-size: 0.9em; color: #666;">csrc/kernels/intranode.cu:613-628</a>, the kernel is launched with <code>1 + num_channels</code> blocks, each block processes <em>all</em> ranks, assigning one warp per rank, so each block does 2× more work instead of adding more parallelism.</p>
+
+                <p>This explains the ~2.7× slowdown in <code>cached_notify_combine</code> and the general degradation of DeepEP intranode kernels at higher EP.</p>
+
+                <p>After fixing Problem 2 (see below) to make <code>num_sms</code> tunable, I swept over multiple SM counts and found a significantly better configuration:</p>
+
+                <div style="background-color: #fafafa; padding: 24px; border-radius: 8px; margin: 24px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 600; color: #1d1d1f; margin-bottom: 16px;">num_sms = 128 (up from 24)</p>
+
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 8px;">Dispatch Config:</p>
+                        <pre style="background-color: #fff; padding: 12px; border-radius: 6px; border: 1px solid #e5e5e5; font-size: 0.85em; line-height: 1.6; margin: 0;"><code>- turbo_deepep_num_cus = 128
+- turbo_deepep_dispatch_tuned_config = (32, 1024, 8, 128)
+- Performance: 122.32 μs, 496.28 GB/s</code></pre>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 8px;">Combine Config:</p>
+                        <pre style="background-color: #fff; padding: 12px; border-radius: 6px; border: 1px solid #e5e5e5; font-size: 0.85em; line-height: 1.6; margin: 0;"><code>- turbo_deepep_combine_tuned_config = (16, 256, 8, 128)
+- Performance: 127.43 μs, 476.36 GB/s</code></pre>
+                    </div>
+
+                    <div>
+                        <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 8px;">Performance Improvements</p>
+                        <div style="background-color: #fff; padding: 12px; border-radius: 6px; border: 1px solid #e5e5e5;">
+                            <p style="font-size: 0.9em; margin-bottom: 12px; font-weight: 500; color: #1d1d1f;">Comparison vs Current Baseline (num_sms=24):</p>
+                            <pre style="font-size: 0.85em; line-height: 1.6; margin: 0;"><code>- Dispatch: 56.3% faster (279.69 μs → 122.32 μs)
+- Combine: 61.8% faster (333.95 μs → 127.43 μs)
+- Bandwidth: 2.28x higher for dispatch (217.90 GB/s → 496.28 GB/s)
+- Bandwidth: 2.61x higher for combine (182.49 GB/s → 476.36 GB/s)</code></pre>
+
+                            <p style="font-size: 0.9em; margin: 12px 0 8px 0; font-weight: 500; color: #1d1d1f;">Comparison vs Worst (num_sms=8):</p>
+                            <pre style="font-size: 0.85em; line-height: 1.6; margin: 0;"><code>- Dispatch: 83.0% faster (721.57 μs → 122.32 μs)
+- Combine: 84.0% faster (794.58 μs → 127.43 μs)</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <p><strong>Problem 2: Make <code>num_sms</code> tunable in DeepEP's benchmarking script</strong></p>
+
+                <p>While trying to tune <code>num_sms</code>, I discovered that DeepEP's intranode benchmarking/tuning code implicitly assumes a single fixed <code>num_sms</code>. Any attempt to change it mid-run would assert.</p>
+
+                <p>From <a href="https://github.com/deepseek-ai/DeepEP/blob/92fe2deaec24bc92ebd9de276daa6ca9ed602ed4/csrc/config.hpp#L61" style="font-size: 0.9em; color: #666;">csrc/config.hpp:61</a>:</p>
+
+                <pre style="background-color: #f5f5f5; padding: 12px; border-radius: 4px; overflow-x: auto; border: 1px solid #e0e0e0; font-size: 0.9em;"><code>const int num_channels = num_sms / 2;  // KEY: derived from num_sms</code></pre>
+
+                <p>This breaks when we vary <code>num_sms</code>:</p>
+
+                <p style="margin-left: 1.5em; font-size: 0.95em;">
+                    • Initial run (baseline config): <code>num_sms = 24 → num_channels = 24 / 2 = 12</code><br>
+                    • Cached matrix shape becomes [4, 12] for a 4-rank setup.<br>
+                    • Later run in the same process, trying to test: <code>num_sms = 32 → expects num_channels = 32 / 2 = 16</code><br>
+                    • DeepEP checks the cached matrix via an assertion in <code>deep_ep.cpp:403</code>: <code>cached_matrix->size(1) == num_channels</code><br>
+                    • But the matrix is still [4, 12], so: Expected: 16, Actual: 12
+                </p>
+
+                <p>Assertion fails → the tuner crashes as soon as <code>num_sms</code> changes. Because the Buffer's cached routing metadata is intrinsically tied to <code>num_sms</code>, but the code treats it as if it were reusable across configurations.</p>
+
+                <p>To unblock tuning, I changed the intranode benchmarking flow to create a separate Buffer instance for each <code>num_sms</code> value in the sweep.</p>
+
+                <p><strong>Results:</strong> Our current EP runs achieve about <strong>57% of the theoretical limit</strong>, while DeepEP's baseline reaches about <strong>34% of the theoretical limit</strong> on their hardware.</p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0;">
+                    <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #e5e5e5;">
+                        <p style="margin-bottom: 12px; font-weight: 500; color: #1d1d1f;">DeepEP's Reference Squeeze (H800)</p>
+                        <div style="background-color: #fff; padding: 14px; border-radius: 6px; border: 1px solid #e5e5e5;">
+                            <pre style="font-size: 0.85em; line-height: 1.8; margin: 0; color: #1d1d1f;"><code>- Theoretical: 450 GB/s
+- Achieved: 153 GB/s
+- Squeezed: 34.0% of hardware capability</code></pre>
+                        </div>
+                    </div>
+
+                    <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #e5e5e5;">
+                        <p style="margin-bottom: 12px; font-weight: 500; color: #1d1d1f;">Your Squeeze (B200)</p>
+                        <div style="background-color: #fff; padding: 14px; border-radius: 6px; border: 1px solid #e5e5e5;">
+                            <pre style="font-size: 0.85em; line-height: 1.8; margin: 0; color: #1d1d1f;"><code>- Theoretical: 900 GB/s
+- Achieved: 516.71 GB/s
+- Squeezed: 57.4% of hardware capability</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <article class="project" id="nov-18">
+                <h3>November 18 - Identifying the Next Bottleneck: CPU Launch Overhead</h3>
+                <p>With near-linear scaling across nodes achieved, focus shifted to optimizing single end-to-end training step performance. Identified the critical bottleneck:</p>
+
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 600; color: #1d1d1f; margin-bottom: 12px;">#1. ScatterAddBackward0</p>
+                    <pre style="background-color: #fff; padding: 14px; border-radius: 6px; border: 1px solid #e5e5e5; font-size: 0.85em; line-height: 1.6; margin: 0;"><code>CPU Boundary Time:  4.32s (36.26% of total)
+GPU Kernel Time:    1.13s (26.16% of CPU time)
+CPU Overhead:       3.19s (73.84% of CPU time)</code></pre>
+
+                    <div style="margin-top: 12px;">
+                        <p style="font-size: 0.9em; color: #666; margin-bottom: 8px;">Primary Kernel:</p>
+                        <pre style="background-color: #fff; padding: 12px; border-radius: 6px; border: 1px solid #e5e5e5; font-size: 0.8em; line-height: 1.5; margin: 0; overflow-x: auto;"><code>void at::native::indexFuncLargeIndex&lt;c10::BFloat16, long, unsigned int, 2,
+  GPU Time: 419.0ms (96 invocations, avg 4364.7μs)</code></pre>
+                    </div>
+
+                    <div style="margin-top: 12px;">
+                        <p style="font-size: 0.9em; color: #666; margin-bottom: 8px;">Associated Kernels (12 total):</p>
+                        <pre style="background-color: #fff; padding: 12px; border-radius: 6px; border: 1px solid #e5e5e5; font-size: 0.75em; line-height: 1.5; margin: 0; overflow-x: auto;"><code>• void at::native::indexFuncLargeIndex&lt;c10::BFloat16, long, unsigned int, 2, 2, -2, true
+• void at::native::_scatter_gather_elementwise_kernel&lt;128, 8, at::native::_cuda_scatter_
+• void at::native::vectorized_gather_kernel&lt;16, long&gt;(char*, char*, long*, int, long, lo
+• ncc!DevKernel_AllGather_RING_LL(ncc!DevKernelArgsStorage&lt;4096Ul&gt;): 110.8ms (198 calls)
+• void at::native::sbtopk::gatherTopK&lt;float, unsigned int, 2, false&gt;(at::cuda::detail::T
+• ... and 7 more</code></pre>
+                    </div>
+                </div>
+
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 600; color: #1d1d1f; margin-bottom: 12px;">#2. FusedDispatch</p>
+                    <pre style="background-color: #fff; padding: 14px; border-radius: 6px; border: 1px solid #e5e5e5; font-size: 0.85em; line-height: 1.6; margin: 0;"><code>CPU Boundary Time:  2.12s (17.77% of total)
+GPU Kernel Time:  309.3ms (14.61% of CPU time)
+CPU Overhead:       1.81s (85.39% of CPU time)</code></pre>
+
+                    <div style="margin-top: 12px;">
+                        <p style="font-size: 0.9em; color: #666; margin-bottom: 8px;">Primary Kernel:</p>
+                        <pre style="background-color: #fff; padding: 12px; border-radius: 6px; border: 1px solid #e5e5e5; font-size: 0.8em; line-height: 1.5; margin: 0; overflow-x: auto;"><code>void deep_ep::intranode::dispatch&lt;8, 768, 8192&gt;(int4*, float*, int*, long*,
+  GPU Time: 95.2ms (288 invocations, avg 330.4μs)</code></pre>
+                    </div>
+
+                    <div style="margin-top: 12px;">
+                        <p style="font-size: 0.9em; color: #666; margin-bottom: 8px;">Associated Kernels (9 total):</p>
+                        <pre style="background-color: #fff; padding: 12px; border-radius: 6px; border: 1px solid #e5e5e5; font-size: 0.75em; line-height: 1.5; margin: 0; overflow-x: auto;"><code>• void deep_ep::intranode::dispatch&lt;8, 768, 8192&gt;(int4*, float*, int*, long*, float*, int*
+• void at::native::(anonymous namespace)::multi_tensor_apply_kernel&lt;at::native::(anonymous
+• void deep_ep::layout::get_dispatch_layout&lt;256, 4, 8&gt;(long const*, int*, int*, int*, bool
+• void deep_ep::intranode::notify_dispatch&lt;8&gt;(int const*, int*, int const*, int*, int, int
+• void deep_ep::intranode::cached_notify_dispatch&lt;8&gt;(int const*, int, void**, int**, int):
+• ... and 4 more</code></pre>
+                    </div>
+                </div>
+
+                <p>These two ops alone account for <strong>36% + 17% = ~53% of the total end-to-end step time</strong>, and most of that is cpu-side dispatch / launch overhead rather than raw gpu compute. (All numbers are per-step cpu boundary time)</p>
+
+                <p><strong>Sanity check:</strong> I temporarily commented out the single <code>scatter_add</code> line <a href="https://github.com/NousResearch/torchtitan/blob/f874271c961c42f3c690c14d325f6a812fb6a1b3/torchtitan/distributed/deepep/utils.py#L58-L60" style="font-size: 0.9em; color: #666;">[link]</a>. With everything else unchanged, throughput jumps to <strong>~21k (30% jump in throughput)</strong> and we hit <strong>~500 tflop/s</strong> - which pretty clearly confirms this as the next real bottleneck.</p>
+
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 12px;">Summary statistics of all operations</p>
+                    <pre style="background-color: #fff; padding: 14px; border-radius: 6px; border: 1px solid #e5e5e5; font-size: 0.85em; line-height: 1.6; margin: 0;"><code>+ Total CPU Boundary Time: 11.91s
++ Total GPU Kernel Time:   31.32s (262.9% of CPU time)
++ Total CPU Overhead:       8.99s (75.4% of CPU time)
++ Total Operations:           153</code></pre>
+                </div>
+            </article>
+            <article class="project" id="nov-24">
+                <h3>November 24 - Achieving 10T Tokens/Month Throughput</h3>
+                <p>With 256 GPUs (Qwen3-30B-A3B):</p>
+
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 12px;">Projected Throughput at 256 GPUs</p>
+                    <pre style="background-color: #fff; padding: 14px; border-radius: 6px; border: 1px solid #e5e5e5; font-size: 0.85em; line-height: 1.6; margin: 0;"><code>+ Expected aggregate throughput: 3.6M tokens/sec (14,123 × 256 GPUs)
++ Translates to: 10T tokens/month
+
++ With scatter optimization (30% improvement):
+  - 10T tokens in 20 days
+  - 30T tokens in 2 months
+  - For reference: Qwen3-30B-A3B was trained on 36T tokens</code></pre>
+                </div>
+
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 600; color: #1d1d1f; margin-bottom: 16px;">Scaling Results: Qwen3-30B (128 experts, top-k=8)</p>
+
+                    <div style="margin-bottom: 16px;">
+                        <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 8px; font-size: 0.9em;">Strong Scaling (fixed batch size, increasing nodes):</p>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 6px; overflow: hidden; border: 1px solid #e5e5e5;">
+                                <thead>
+                                    <tr style="background-color: #f5f5f5;">
+                                        <th style="padding: 10px; text-align: left; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5;">Configuration</th>
+                                        <th style="padding: 10px; text-align: left; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5;">Nodes</th>
+                                        <th style="padding: 10px; text-align: left; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5;">GPUs</th>
+                                        <th style="padding: 10px; text-align: left; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5;">Tokens/sec</th>
+                                        <th style="padding: 10px; text-align: left; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5;">TFLOPS</th>
+                                        <th style="padding: 10px; text-align: left; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5;">Memory/GPU</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: 0.85em;">
+                                    <tr>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">1 node</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">1</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">8</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">14,796</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">341</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">167.93 GiB (94.15%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">2 nodes</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">2</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">16</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">14,380</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">331</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">138.75 GiB (77.78%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">4 nodes</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">4</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">32</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">14,276</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">329</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">124.58 GiB (69.84%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">8 nodes</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">8</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">64</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">14,107</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">325</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">117.50 GiB (65.88%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px;">16 nodes</td>
+                                        <td style="padding: 10px;">16</td>
+                                        <td style="padding: 10px;">128</td>
+                                        <td style="padding: 10px;">13,856</td>
+                                        <td style="padding: 10px;">319</td>
+                                        <td style="padding: 10px;">114.78 GiB (64.35%)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 8px; font-size: 0.9em;">Weak Scaling (optimized batch size for 16 nodes):</p>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 6px; overflow: hidden; border: 1px solid #e5e5e5;">
+                                <thead>
+                                    <tr style="background-color: #f5f5f5;">
+                                        <th style="padding: 10px; text-align: left; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5;">LBS</th>
+                                        <th style="padding: 10px; text-align: left; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5;">Nodes</th>
+                                        <th style="padding: 10px; text-align: left; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5;">GPUs</th>
+                                        <th style="padding: 10px; text-align: left; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5;">Tokens/sec</th>
+                                        <th style="padding: 10px; text-align: left; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5;">TFLOPS</th>
+                                        <th style="padding: 10px; text-align: left; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5;">Memory/GPU</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: 0.85em;">
+                                    <tr>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">8</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">16</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">128</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">13,856</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">319</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">114.78 GiB (64.35%)</td>
+                                    </tr>
+                                    <tr style="background-color: #f9f9f9;">
+                                        <td style="padding: 10px; font-weight: 500;">10</td>
+                                        <td style="padding: 10px; font-weight: 500;">16</td>
+                                        <td style="padding: 10px; font-weight: 500;">128</td>
+                                        <td style="padding: 10px; font-weight: 500;">14,123</td>
+                                        <td style="padding: 10px; font-weight: 500;">326</td>
+                                        <td style="padding: 10px; font-weight: 500;">142.21 GiB (79.73%)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.9em; color: #666; font-style: italic;">With expert parallelism optimized to remain within a single node for the 30B-A3B configuration, throughput is expected to scale near-linearly to 256 GPUs. Any throughput degradation at this scale is attributed to non-expert parallelism factors.</p>
+            </article>
+            <article class="project" id="nov-25">
+                <h3>November 25 - Fixing Gradient Norm Explosion in MoE Training</h3>
+                <p>Root cause: router weights initialized to zeros.</p>
+
+                <p>Investigation started with gradient norm blowup (143,000x imbalance between rank 0 and ranks 1-7). Traced backwards through the routing logic to identify the token distribution issue.</p>
+
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 12px;">Token Distribution - All tokens routing to rank 0</p>
+                    <pre style="background-color: #fff; padding: 14px; border-radius: 6px; border: 1px solid #e5e5e5; font-size: 0.85em; line-height: 1.6; margin: 0;"><code>tokens_per_dest_rank: [524288, 0, 0, 0, 0, 0, 0, 0]
+expert_idx: min=0, max=7, mean=3.5</code></pre>
+                    <p style="margin-top: 12px; font-size: 0.9em; color: #666;">All 8 ranks sending 100% of their tokens to rank 0. With 128 experts across EP=8, each rank should receive somewhere around <code>524288/128/8</code> tokens.</p>
+                </div>
+
+                <p>Router output analysis:</p>
+
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 12px;">Router Scores - All zeros</p>
+                    <pre style="background-color: #fff; padding: 14px; border-radius: 6px; border: 1px solid #e5e5e5; font-size: 0.85em; line-height: 1.6; margin: 0;"><code>scores.shape: (8192, 128)  # looks right
+scores: mean=0, std=0, min=0, max=0  # all zeros</code></pre>
+                    <p style="margin-top: 12px; font-size: 0.9em; color: #666;">The router computes <code>scores = gate(x)</code> where gate is a linear projection (128, 2048). If scores are all zero, then <code>topk(scores, k=8)</code> has to break ties, PyTorch just returns the first k indices <code>[0,1,2,3,4,5,6,7]</code>.</p>
+                </div>
+
+                <p>Gate weights and input analysis revealed:</p>
+
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 12px;">Root Cause - Gate weights initialized to zeros</p>
+                    <pre style="background-color: #fff; padding: 14px; border-radius: 6px; border: 1px solid #e5e5e5; font-size: 0.85em; line-height: 1.6; margin: 0;"><code>input x: (8192, 2048), mean=0.005, std=1.0, range [-5, 5.4]  # fine
+gate.weight: (128, 2048), mean=0, std=0  # zeros</code></pre>
+                    <p style="margin-top: 12px; font-size: 0.9em; color: #666;">Input activations look healthy (normalized, no nan/inf). But notice gate weight is entirely zeros - and recall <code>scores = x @ W.T</code>, so with <code>W=0</code> we get zero scores regardless of input. That's the cause.</p>
+                </div>
+            </article>
+            <article class="project" id="dec-2">
+                <h3>December 2 - Grad Norm Issue Due to torch._grouped_gemm Bug</h3>
+                <p><code>torch._grouped_mm</code> backward pass produces garbage gradients when an expert has 0 tokens.</p>
+
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 12px;">The Problem</p>
+                    <p style="font-size: 0.9em; color: #1d1d1f; line-height: 1.6; margin: 0;">When force load balancing is disabled, meaning the router is trained from scratch, some experts receive no tokens at the beginning. Those experts should have zero gradients. But for this to work properly, <code>torch._grouped_mm</code> expects experts with 0 token count to be padded up to 8 (which is odd). Ideally, this shouldn't be necessary.</p>
+                </div>
+
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 12px;">The Fix</p>
+                    <p style="font-size: 0.9em; color: #1d1d1f; line-height: 1.6; margin-bottom: 12px;">Added extra padding for experts with zero tokens to 8, ensuring the kernel produces correct gradients during backward pass.</p>
+
+                    <p style="font-size: 0.9em; color: #1d1d1f; line-height: 1.6; margin-bottom: 8px;">Torchtitan has a workaround for this by using <code>clamp_min</code> set to 8 <a href="https://github.com/NousResearch/torchtitan/blob/434a2b984037017146b3573b4a1074ae9d7a698b/torchtitan/models/moe/kernels.py#L181" style="font-size: 0.85em; color: #666;">[link]</a>, which technically produces incorrect gradients if the router happens to route exactly 8 tokens to an expert. But in training, since we usually have at least 2M tokens in total, the probability of routing exactly 8 tokens is very small. Still, it is technically a bug originating from <code>torch._grouped_mm</code>.</p>
+                </div>
+
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 12px;">Verification</p>
+                    <p style="font-size: 0.9em; color: #1d1d1f; line-height: 1.6; margin-bottom: 16px;">Comparison between commit state before the DeepEP PR and the DeepEP PR confirms loss curves and grad norm match ✓</p>
+
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 6px; overflow: hidden; border: 1px solid #e5e5e5;">
+                            <thead>
+                                <tr style="background-color: #f5f5f5;">
+                                    <th style="padding: 10px; text-align: left; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5;"></th>
+                                    <th style="padding: 10px; text-align: center; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5; border-left: 1px solid #e5e5e5;">EP = 1<br><span style="font-size: 0.8em; font-weight: 400; color: #666;">DeepEP PR Reference</span></th>
+                                    <th style="padding: 10px; text-align: center; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5; border-left: 1px solid #e5e5e5;" colspan="2">EP = 8 (No DeepEP)</th>
+                                    <th style="padding: 10px; text-align: center; font-size: 0.85em; font-weight: 500; border-bottom: 1px solid #e5e5e5; border-left: 1px solid #e5e5e5;" colspan="2">EP = 8 (With DeepEP)</th>
+                                </tr>
+                                <tr style="background-color: #f5f5f5;">
+                                    <th style="padding: 8px; text-align: left; font-size: 0.8em; font-weight: 400; border-bottom: 1px solid #e5e5e5;"></th>
+                                    <th style="padding: 8px; text-align: center; font-size: 0.8em; font-weight: 400; border-bottom: 1px solid #e5e5e5; border-left: 1px solid #e5e5e5;"></th>
+                                    <th style="padding: 8px; text-align: center; font-size: 0.8em; font-weight: 400; border-bottom: 1px solid #e5e5e5; border-left: 1px solid #e5e5e5;">DeepEP PR</th>
+                                    <th style="padding: 8px; text-align: center; font-size: 0.8em; font-weight: 400; border-bottom: 1px solid #e5e5e5; border-left: 1px solid #e5e5e5;">Reference</th>
+                                    <th style="padding: 8px; text-align: center; font-size: 0.8em; font-weight: 400; border-bottom: 1px solid #e5e5e5; border-left: 1px solid #e5e5e5;">DeepEP PR</th>
+                                    <th style="padding: 8px; text-align: center; font-size: 0.8em; font-weight: 400; border-bottom: 1px solid #e5e5e5; border-left: 1px solid #e5e5e5;"></th>
+                                </tr>
+                            </thead>
+                            <tbody style="font-size: 0.85em;">
+                                <tr style="background-color: #fafafa;">
+                                    <td colspan="6" style="padding: 8px; font-weight: 500; color: #1d1d1f;">Force Load Balance = ❌</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">Loss</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5;">7.55</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5;">7.57</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5;">7.54</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5;">7.61</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5; background-color: #f0fdf4; font-weight: 500;">7.52</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">Grad Norm</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5;">1.65</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5;">1.83</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5;">1.33</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5;">1.54</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5; background-color: #f0fdf4; font-weight: 500;">1.01</td>
+                                </tr>
+                                <tr style="background-color: #fafafa;">
+                                    <td colspan="6" style="padding: 8px; font-weight: 500; color: #1d1d1f; border-top: 2px solid #e5e5e5;">Force Load Balance = ✓</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">Loss</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5;">7.70</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5; color: #dc2626;">❌ OOM</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5;">7.79</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5;">7.97</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0; text-align: center; border-left: 1px solid #e5e5e5; background-color: #f0fdf4; font-weight: 500;">7.69</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px;">Grad Norm</td>
+                                    <td style="padding: 10px; text-align: center; border-left: 1px solid #e5e5e5;">0.84</td>
+                                    <td style="padding: 10px; text-align: center; border-left: 1px solid #e5e5e5;">-</td>
+                                    <td style="padding: 10px; text-align: center; border-left: 1px solid #e5e5e5;">1.70</td>
+                                    <td style="padding: 10px; text-align: center; border-left: 1px solid #e5e5e5;">1.52</td>
+                                    <td style="padding: 10px; text-align: center; border-left: 1px solid #e5e5e5; background-color: #f0fdf4; font-weight: 500;">0.70</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p style="margin-top: 12px; font-size: 0.85em; color: #666; font-style: italic;">Note: Everything is identical except the commit state, force_load_balance (true or false), and ep_degree (1 or 8). The DeepEP PR with EP=8 matches the reference results.</p>
+                </div>
+            </article>
+            <article class="project" id="dec-5">
+                <h3>December 5 - Fused Kernel Rounding Mode Differences</h3>
+                <p>Recovered original end-to-end throughput using new fused <code>[SiLU + expert_output * router_prob]</code> triton kernel. Benchmarking comparison with original PyTorch SiLU below.</p>
+
+                <div style="margin: 24px 0;">
+                    <img src="fused-kernel-benchmark.png" alt="Fused kernel benchmark comparison" style="max-width: 100%; height: auto; border: 1px solid #e5e5e5; border-radius: 6px;">
+                </div>
+
+                <p>Loss offset observed during end-to-end training with the triton kernel (without grad norm explosion), caused by gradient differences due to accumulation error from triton's rounding.</p>
+
+                <div style="margin: 24px 0;">
+                    <img src="gradient-difference.png" alt="Gradient difference due to rounding" style="max-width: 100%; height: auto; border: 1px solid #e5e5e5; border-radius: 6px;">
+                </div>
+
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 12px;">The 1-ULP Difference (0.00390625)</p>
+                    <p style="font-size: 0.9em; color: #1d1d1f; line-height: 1.6; margin-bottom: 12px;">This is due to the following:</p>
+                    <ul style="font-size: 0.9em; color: #1d1d1f; line-height: 1.6; margin-left: 1.5em;">
+                        <li style="margin-bottom: 8px;">Triton uses a different rounding mode when casting f32 → bf16.</li>
+                        <li style="margin-bottom: 8px;">PyTorch uses IEEE round-to-nearest-even.</li>
+                    </ul>
+
+                    <p style="font-size: 0.9em; color: #1d1d1f; line-height: 1.6; margin-top: 12px; margin-bottom: 8px;">For the value <code>0.5683592558</code>: The true value lies almost exactly between two bf16 values.</p>
+                    <ul style="font-size: 0.9em; color: #1d1d1f; line-height: 1.6; margin-left: 1.5em;">
+                        <li style="margin-bottom: 8px;">PyTorch rounds it to <code>0.56640625</code>.</li>
+                        <li style="margin-bottom: 8px;">Triton rounds it to <code>0.5703125</code>.</li>
+                    </ul>
+
+                    <p style="font-size: 0.9em; color: #666; line-height: 1.6; margin-top: 12px; font-style: italic;">Both are valid representations (error ≈ 0.002).</p>
+                </div>
+
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 12px;">Root Cause: Probability Scaling Position</p>
+                    <p style="font-size: 0.9em; color: #1d1d1f; line-height: 1.6; margin-bottom: 12px;">It seems like the gradient difference is caused by probability scaling position:</p>
+
+                    <pre style="background-color: #fff; padding: 14px; border-radius: 6px; border: 1px solid #e5e5e5; font-size: 0.85em; line-height: 1.6; margin: 0; overflow-x: auto;"><code>Standard EP:  out = (silu(x@w1) * (x@w3) @ w2).float() * prob   [prob AFTER w2]
+DeepEP fused: out = ((silu(x@w1) * (x@w3)).float() * prob).bf16() @ w2   [prob BEFORE w2]</code></pre>
+
+                    <p style="font-size: 0.9em; color: #1d1d1f; line-height: 1.6; margin-top: 12px;">Float64 testing confirmed no difference, proving <strong>mathematical equivalence</strong> → in bf16, order of operations affects numerical precision.</p>
+                </div>
+            </article>
+            <article class="project" id="dec-9">
+                <h3>December 9 - Achieving 15,057 TPS with Fused Kernel Optimizations</h3>
+                <p>[Qwen3 30B A3B] Last week I made a final attempt to recover the original 14,796 per-GPU throughput, and now our best optimization has <strong>15,057 tps</strong>. I implemented the following three optimizations, and trained them for 5k steps and compared with torchtitan's default EP:</p>
+
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e5e5;">
+                    <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 16px;">Three Optimizations</p>
+
+                    <div style="margin-bottom: 16px;">
+                        <p style="font-size: 0.9em; color: #1d1d1f; line-height: 1.6;"><strong>1.</strong> Wrote a triton kernel to directly fuse <code>expert_output * router_probs</code> (expert multiplication) with the silu activations in the FFN <a href="https://github.com/NousResearch/torchtitan/blob/71ea04ecf60190803c71ee9a1337c0d4f678c292/torchtitan/distributed/deepep/fused_activation.py#L178" style="font-size: 0.85em; color: #666;">[commit]</a></p>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <p style="font-size: 0.9em; color: #1d1d1f; line-height: 1.6;"><strong>2.</strong> Wrote another triton kernel to fuse expert multiplication with <code>scatter_add_</code> <a href="https://github.com/NousResearch/torchtitan/blob/71ea04ecf60190803c71ee9a1337c0d4f678c292/torchtitan/distributed/deepep/kernels/fused_weighted_scatter.py#L266" style="font-size: 0.85em; color: #666;">[commit]</a></p>
+                    </div>
+
+                    <div>
+                        <p style="font-size: 0.9em; color: #1d1d1f; line-height: 1.6; margin-bottom: 8px;"><strong>3.</strong> Created a fork of DeepEP and modified it to trade a 50% increase in all-to-all communication volume for higher throughput by fusing the multiplication into DeepEP's combining kernel <a href="https://github.com/deepseek-ai/DeepEP/compare/main...NousResearch:DeepEP:phuc/fused_expert_multi_to_comebine_and_dispatch" style="font-size: 0.85em; color: #666;">[our deepep fork]</a>.</p>
+                        <p style="font-size: 0.85em; color: #666; font-style: italic; margin-left: 1.5em;">I didn't add this to torchtitan because I realize optimizations 1 and 2 are already good enough, and this would require refactoring the MoE modeling, so I deprioritized it for now, since it would take too much time.</p>
+                    </div>
+                </div>
+
+                <div style="margin: 24px 0;">
+                    <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 12px; font-size: 0.9em;">Throughput Comparison</p>
+                    <img src="optimization-throughput-comparison.png" alt="Optimization throughput comparison" style="max-width: 100%; height: auto; border: 1px solid #e5e5e5; border-radius: 6px;">
+                </div>
+
+                <div style="margin: 24px 0;">
+                    <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 12px; font-size: 0.9em;">Loss Curves (5k steps)</p>
+                    <img src="optimization-loss-curves.png" alt="Loss curves comparison" style="max-width: 100%; height: auto; border: 1px solid #e5e5e5; border-radius: 6px;">
+                </div>
+
+                <div style="margin: 24px 0;">
+                    <p style="font-weight: 500; color: #1d1d1f; margin-bottom: 12px; font-size: 0.9em;">Gradient Norms (5k steps)</p>
+                    <img src="optimization-grad-norms.png" alt="Gradient norms comparison" style="max-width: 100%; height: auto; border: 1px solid #e5e5e5; border-radius: 6px;">
+                </div>
+            </article>
+
+        </section>
+    </main>
+</body>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NKWSNHSJ2F"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NKWSNHSJ2F');
+</script>
+
+</html>
