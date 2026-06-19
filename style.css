@@ -165,6 +165,16 @@ code {
     color: #000;
 }
 
+.top-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: flex-end;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eee;
+}
+
 .person {
     margin-bottom: 20px;
     padding-bottom: 16px;
@@ -234,10 +244,8 @@ code {
         margin-bottom: 16px;
     }
 
-    .nav-links {
-        margin-bottom: 0;
-        align-self: flex-end;
-        margin-top: -48px;
+    .top-nav {
+        justify-content: flex-start;
     }
 
     .person {
