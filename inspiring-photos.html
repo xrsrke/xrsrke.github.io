@@ -6,30 +6,150 @@
     <title>Inspiring Photos - Phuc Nguyen</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        .container.photos-container {
+            max-width: 960px;
+        }
         .photos {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 32px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
-        .photo figure {
+        .photo {
             margin: 0;
+            display: flex;
+            flex-direction: column;
         }
-        .photo img {
-            width: 100%;
-            height: auto;
+        .photo button.thumb {
+            all: unset;
+            cursor: zoom-in;
             display: block;
-            border-radius: 4px;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            border-radius: 6px;
+            background: #f5f5f5;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.04);
+            transition: box-shadow 0.25s ease, transform 0.25s ease;
+        }
+        .photo button.thumb:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 8px 24px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+        .photo button.thumb:focus-visible {
+            outline: 2px solid #7c3aed;
+            outline-offset: 3px;
+        }
+        .photo button.thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+        .photo button.thumb:hover img {
+            transform: scale(1.05);
         }
         .photo figcaption {
-            margin-top: 8px;
-            font-size: 14px;
+            margin-top: 10px;
+            font-size: 13px;
             color: #666;
-            line-height: 1.4;
+            line-height: 1.45;
+        }
+
+        @media (max-width: 720px) {
+            .photos {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 14px;
+            }
+        }
+        @media (max-width: 420px) {
+            .photos {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 15, 18, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 32px;
+            cursor: zoom-out;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+        .lightbox.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .lightbox-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 100%;
+            max-height: 100%;
+            gap: 16px;
+            cursor: default;
+            transform: scale(0.96);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .lightbox.open .lightbox-content {
+            transform: scale(1);
+        }
+        .lightbox img {
+            max-width: 100%;
+            max-height: 82vh;
+            object-fit: contain;
+            border-radius: 6px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        .lightbox-caption {
+            color: #d4d4d4;
+            font-size: 14px;
+            text-align: center;
+            max-width: 720px;
+            line-height: 1.5;
+        }
+        .lightbox-caption a {
+            color: #fff;
+            text-decoration: underline;
+            text-decoration-color: rgba(255, 255, 255, 0.4);
+        }
+        .lightbox-caption a:hover {
+            text-decoration-color: #fff;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+        .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.18);
         }
     </style>
 </head>
 <body>
-    <main class="container">
+    <main class="container photos-container">
         <header>
             <nav class="nav-links">
                 <a href="index.html">← Back to Home</a>
@@ -38,14 +158,83 @@
         </header>
 
         <section class="photos">
+<!--
             <figure class="photo">
-                <img src="kardashev-scale.png" alt="The Kardashev Scale: we aspire to be a galactic civilization">
-                <figcaption>The Kardashev Scale — we aspire to be a galactic civilization (Type III: harness all the energy in a galaxy).</figcaption>
+                <button class="thumb" type="button" data-caption='The Kardashev Scale — we aspire to be a &lt;a href="https://terafab.ai/"&gt;galactic civilization&lt;/a&gt; (Type III: harness all the energy in a galaxy).'>
+                    <img src="kardashev-scale.png" alt="The Kardashev Scale: we aspire to be a galactic civilization">
+                </button>
+                <figcaption>The Kardashev Scale — we aspire to be a <a href="https://terafab.ai/">galactic civilization</a> (Type III: harness all the energy in a galaxy).</figcaption>
+            </figure>
+-->
+
+            <figure class="photo">
+                <button class="thumb" type="button" data-caption='OpenAI milestone, June 11, 2018 — "Improving language understanding with unsupervised learning" (GPT-1). Illustration: Ben Barry.'>
+                    <img src="gpt-1-milestone.png" alt="OpenAI milestone: Improving language understanding with unsupervised learning (June 11, 2018)">
+                </button>
+                <figcaption>OpenAI milestone, June 11, 2018 — "Improving language understanding with unsupervised learning" (GPT-1). Illustration: Ben Barry.</figcaption>
+            </figure>
+            <figure class="photo">
+                <button class="thumb" type="button" data-caption='The Trinity test — the first atomic bomb is successfully detonated, July 16, 1945. Source: &lt;a href="https://en.wikipedia.org/wiki/Trinity_%28nuclear_test%29"&gt;Wikipedia&lt;/a&gt;.'>
+                    <img src="trinity-atomic-bomb-test.jpg" alt="The Trinity test, the first atomic bomb detonation, July 16, 1945">
+                </button>
+                <figcaption>The Trinity test — the first atomic bomb is successfully detonated, July 16, 1945. Source: <a href="https://en.wikipedia.org/wiki/Trinity_%28nuclear_test%29">Wikipedia</a>.</figcaption>
+            </figure>
+            <figure class="photo">
+                <button class="thumb" type="button" data-caption='Falcon 9 first-stage landing test — the first steps toward reusable rockets. Source: &lt;a href="https://en.wikipedia.org/wiki/Falcon_9_first-stage_landing_tests"&gt;Wikipedia&lt;/a&gt;.'>
+                    <img src="falcon9-first-landing.jpg" alt="Falcon 9 first-stage booster landing attempt on a drone ship">
+                </button>
+                <figcaption>Falcon 9 first-stage landing test — the first steps toward reusable rockets. Source: <a href="https://en.wikipedia.org/wiki/Falcon_9_first-stage_landing_tests">Wikipedia</a>.</figcaption>
+            </figure>
+            <figure class="photo">
+                <button class="thumb" type="button" data-caption='Falcon 1 Flight 4 mission control, September 28, 2008 — SpaceX&#39;s first successful orbital launch, the mission that saved the company from ruin. Source: &lt;a href="https://arstechnica.com/science/2018/09/inside-the-eight-desperate-weeks-that-saved-spacex-from-ruin/"&gt;Ars Technica&lt;/a&gt;.'>
+                    <img src="falcon1-flight4-mission-control.jpg" alt="Falcon 1 Flight 4 mission control with Elon Musk watching the launch, September 28, 2008">
+                </button>
+                <figcaption>Falcon 1 Flight 4 mission control, September 28, 2008 — SpaceX's first successful orbital launch, the mission that saved the company from ruin. Source: <a href="https://arstechnica.com/science/2018/09/inside-the-eight-desperate-weeks-that-saved-spacex-from-ruin/">Ars Technica</a>.</figcaption>
             </figure>
         </section>
 
     </main>
-</body>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+        <button class="lightbox-close" type="button" aria-label="Close">&times;</button>
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="">
+            <div class="lightbox-caption" id="lightbox-caption"></div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+            const closeBtn = lightbox.querySelector('.lightbox-close');
+
+            document.querySelectorAll('.photo button.thumb').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const img = btn.querySelector('img');
+                    lightboxImg.src = img.src;
+                    lightboxImg.alt = img.alt;
+                    lightboxCaption.innerHTML = btn.dataset.caption || '';
+                    lightbox.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            function close() {
+                lightbox.classList.remove('open');
+                lightboxImg.src = '';
+                document.body.style.overflow = '';
+            }
+
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox || e.target === closeBtn) close();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && lightbox.classList.contains('open')) close();
+            });
+        })();
+    </script>
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NKWSNHSJ2F"></script>
@@ -57,4 +246,5 @@
   gtag('config', 'G-NKWSNHSJ2F');
 </script>
 
+</body>
 </html>
