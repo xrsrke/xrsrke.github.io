@@ -46,6 +46,15 @@
             display: block;
             transition: transform 0.4s ease;
         }
+        .photo button.thumb.fit-contain {
+            background: #0b0b0e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .photo button.thumb.fit-contain img {
+            object-fit: contain;
+        }
         .photo button.thumb:hover img {
             transform: scale(1.05);
         }
@@ -196,6 +205,30 @@
                     <img src="hung-cao.png" alt="Hung Cao, Acting Secretary of the Navy">
                 </button>
                 <figcaption><a href="https://en.wikipedia.org/wiki/Hung_Cao">Hung Cao</a> — Acting Secretary of the Navy, U.S. Department of War.</figcaption>
+            </figure>
+            <figure class="photo">
+                <button class="thumb" type="button" data-caption='The &lt;a href="https://kids.nationalgeographic.com/history/article/moon-landing"&gt;Moon landing&lt;/a&gt; — Apollo 11, July 20, 1969.'>
+                    <img src="moon-landing.png" alt="Apollo 11 Moon landing, July 20, 1969">
+                </button>
+                <figcaption>The <a href="https://kids.nationalgeographic.com/history/article/moon-landing">Moon landing</a> — Apollo 11, July 20, 1969.</figcaption>
+            </figure>
+            <figure class="photo">
+                <button class="thumb" type="button" data-caption='&lt;a href="https://www.nationalgeographic.com/magazine/article/the-god-particle"&gt;The God Particle&lt;/a&gt; — the Higgs boson search at CERN.'>
+                    <img src="god-particle.jpg" alt="The God Particle — CERN Higgs boson research">
+                </button>
+                <figcaption><a href="https://www.nationalgeographic.com/magazine/article/the-god-particle">The God Particle</a> — the Higgs boson search at CERN.</figcaption>
+            </figure>
+            <figure class="photo">
+                <button class="thumb fit-contain" type="button" style="background: linear-gradient(#f3f7f7, #edf1f1);" data-caption='&lt;a href="https://neuralink.com/"&gt;Neuralink&lt;/a&gt; — The Link, the first commercial neural implant that will let you control a computer or mobile device anywhere you go.'>
+                    <img src="neuralink.png" alt="Neuralink — The Link neural implant">
+                </button>
+                <figcaption><a href="https://neuralink.com/">Neuralink</a> — The Link, the first commercial neural implant that will let you control a computer or mobile device anywhere you go.</figcaption>
+            </figure>
+            <figure class="photo">
+                <button class="thumb fit-contain" type="button" style="background: #1d2837;" data-caption='&lt;a href="https://www.wired.com/story/xenobot/"&gt;Xenobots&lt;/a&gt; — the world&#39;s first living, programmable organisms, built from frog cells.'>
+                    <img src="xenobot.png" alt="Xenobots — programmable living organisms built from frog cells">
+                </button>
+                <figcaption><a href="https://www.wired.com/story/xenobot/">Xenobots</a> — the world's first living, programmable organisms, built from frog cells.</figcaption>
             </figure>
         </section>
 
