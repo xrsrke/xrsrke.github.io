@@ -5,6 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favorite Quotes - Phuc Nguyen</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .quotes {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            margin-top: 4px;
+        }
+        .quote {
+            margin: 0;
+        }
+        .quote-body {
+            font-size: 15.5px;
+            line-height: 1.5;
+            color: #1a1a1a;
+            margin: 0 0 4px 0;
+        }
+        .quote-body ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .quote-body ol li {
+            margin-bottom: 3px;
+            line-height: 1.5;
+        }
+        .quote-body ol li:last-child {
+            margin-bottom: 0;
+        }
+        .quote-attr {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.4;
+        }
+        .quote-attr::before {
+            content: "— ";
+        }
+        .quote-attr a {
+            color: #555;
+            text-decoration: none;
+            border-bottom: 1px solid #ddd;
+        }
+        .quote-attr a:hover {
+            color: #000;
+            border-bottom-color: #000;
+        }
+
+        @media (max-width: 600px) {
+            .quotes {
+                gap: 18px;
+            }
+            .quote-body {
+                font-size: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
     <main class="container">
@@ -15,12 +69,62 @@
             <h1 class="name">Quotes</h1>
         </header>
 
-        <section>
-            <p>"In the future, a trillion times a trillion dollars will be spent on making antimatter to travel to other star systems" - <a href="https://x.com/elonmusk/status/2068041714653179981">Elon Musk</a></p>
-            <p>"The most important thing to know about prehistoric humans is that they were insignificant animals with no more impact on their environment than gorillas, fireflies or jellyfish" - <a href="https://cpcglobal.org/publications/Sapiens%20A%20Brief%20History%20of%20Humankind.pdf">Yuval Noah Harari, Sapiens, page 12</a></p>
-            <p>"Legends, myths, gods and religions appeared for the first time with the Cognitive Revolution." - <a href="https://cpcglobal.org/publications/Sapiens%20A%20Brief%20History%20of%20Humankind.pdf">Yuval Noah Harari, Sapiens, page 31</a></p>
-            <p>"You don't need a history to have a future" - Dr. Emil Harting, Bloodshot (2020)</p>
-            <p>"Now I am become Death, the destroyer of worlds" - <a href="https://www.youtube.com/watch?v=lb13ynu3Iac">J. Robert Oppenheimer</a>, quoting the Bhagavad Gita after the Trinity test</p>
+        <section class="quotes">
+            <figure class="quote">
+                <p class="quote-body">"In the future, a trillion times a trillion dollars will be spent on making antimatter to travel to other star systems"</p>
+                <figcaption class="quote-attr"><a href="https://x.com/elonmusk/status/2068041714653179981">Elon Musk</a></figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"The most important thing to know about prehistoric humans is that they were insignificant animals with no more impact on their environment than gorillas, fireflies or jellyfish"</p>
+                <figcaption class="quote-attr"><a href="https://cpcglobal.org/publications/Sapiens%20A%20Brief%20History%20of%20Humankind.pdf">Yuval Noah Harari, Sapiens, page 12</a></figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"Legends, myths, gods and religions appeared for the first time with the Cognitive Revolution."</p>
+                <figcaption class="quote-attr"><a href="https://cpcglobal.org/publications/Sapiens%20A%20Brief%20History%20of%20Humankind.pdf">Yuval Noah Harari, Sapiens, page 31</a></figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"You don't need a history to have a future"</p>
+                <figcaption class="quote-attr">Dr. Emil Harting, Bloodshot (2020)</figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"Now I am become Death, the destroyer of worlds"</p>
+                <figcaption class="quote-attr"><a href="https://www.youtube.com/watch?v=lb13ynu3Iac">J. Robert Oppenheimer</a>, quoting the Bhagavad Gita after the Trinity test</figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"Any sufficiently advanced technology is indistinguishable from magic"</p>
+                <figcaption class="quote-attr"><a href="https://en.wikipedia.org/wiki/Clarke%27s_three_laws">Arthur C. Clarke</a></figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"There is no God. There is no Fate."</p>
+                <figcaption class="quote-attr"><a href="https://www.youtube.com/watch?v=7L7VTdzuY7Y">Stephen Hawking</a></figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"He who has a why to live can bear almost any how"</p>
+                <figcaption class="quote-attr"><a href="https://en.wikipedia.org/wiki/Friedrich_Nietzsche">Friedrich Nietzsche</a>, famously quoted by Viktor Frankl</figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"You do not rise to the level of your goals. You fall to the level of your systems"</p>
+                <figcaption class="quote-attr"><a href="https://jamesclear.com/atomic-habits">James Clear</a>, Atomic Habits</figcaption>
+            </figure>
+
+            <figure class="quote">
+                <div class="quote-body">
+                    <ol>
+                        <li>A robot may not injure a human being or, through inaction, allow a human being to come to harm.</li>
+                        <li>A robot must obey the orders given it by human beings except where such orders would conflict with the First Law.</li>
+                        <li>A robot must protect its own existence as long as such protection does not conflict with the First or Second Law.</li>
+                    </ol>
+                </div>
+                <figcaption class="quote-attr">Isaac Asimov, <a href="https://en.wikipedia.org/wiki/Three_Laws_of_Robotics">Three Laws of Robotics</a></figcaption>
+            </figure>
         </section>
 
     </main>
