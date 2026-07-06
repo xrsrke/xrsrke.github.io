@@ -71,6 +71,8 @@
             <h2>Selected Work</h2>
             <article class="project">
                 <h3><a href="https://nousresearch.com/moe-scaling-field-notes/">MoE Pretraining Infrastructure @ NousResearch</a> <a href="https://nousresearch.com/moe-scaling-field-notes/">[Blog]</a></h3>
+                <p>Post-training for a new generation Hermes model.</p>
+                <p>Post-training infra for Kimi K2 on 512 GPUs.</p>
                 <p>Built a new expert parallelism implementation and validated near-linear scaling across 16 nodes (128 GPUs) on Qwen3-30B-A3B model: <a href="https://github.com/NousResearch/torchtitan/pull/19">[Pull Request]</a><br>
                     <small style="color: #666; margin-left: 2em;">• 50% faster than torchtitan's default expert parallelism (15,057 vs 9,930 tok/s/GPU at EP=8)</small><br>
                     <small style="color: #666; margin-left: 2em;">• Scales near-linearly to 16 nodes (128 GPUs, 13,856 tok/s/GPU), enabling 10T tokens/month throughput at 256 GPUs</small><br>
