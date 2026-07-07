@@ -8,15 +8,15 @@
 </head>
 <body>
     <main class="container">
-        <nav class="nav-links top-nav">
+        <!-- <nav class="nav-links top-nav">
             <a href="favorite-people.html">People</a>
             <a href="favorite-reading.html">Reading</a>
             <a href="favorite-quotes.html">Quotes</a>
             <a href="things-to-understand.html">Things to Understand</a>
-        </nav>
+        </nav> -->
         <header>
             <div class="header-top">
-                <img src="avatar.jpg" alt="Phuc Nguyen" class="avatar">
+                <!-- <img src="avatar.jpg" alt="Phuc Nguyen" class="avatar"> -->
             </div>
             <h1 class="name">Phuc Nguyen</h1>
                         <p class="subtitle">ML research engineer.</p>
@@ -67,6 +67,18 @@
             <p>In my free time, I mostly read non-fiction - a bit of history, rationality, and a fairly diverse mix of other things; here's <a href="favorite-reading.html">a list of books I've read</a>. Once in a while I come across a quote that resonates with me, and I save those <a href="favorite-quotes.html">here</a>. Sometimes I also collect <a href="inspiring-photos.html">photos that I find inspiring</a>. I also keep a list of <a href="favorite-people.html">people I look up to</a>, <a href="favorite-companies.html">favorite companies</a>, and <a href="things-to-understand.html">things I wish to understand deeply</a> someday (and potentially work on in the future).</p>
         </section>
 
+        <section class="books">
+            <h2>Books</h2>
+            <article class="book">
+                <img src="ultrascale-playbook-cover.jpg" alt="The Ultra-Scale Playbook cover" class="book-cover">
+                <div class="book-info">
+                    <h3><a href="https://huggingface.co/spaces/nanotron/ultrascale-playbook">The Ultra-Scale Playbook: Training LLMs on GPU Clusters</a> • <a href="https://www.lulu.com/shop/nouamane-tazi-and-ferdinand-mom-and-haojun-zhao-and-phuc-nguyen/the-ultra-scale-playbook/paperback/product-45yk9dj.html">order the paperback</a></h3>
+                    <p class="book-meta"><em>Nouamane Tazi, Ferdinand Mom, Haojun Zhao, </em><u>Phuc Nguyen</u><em>, Mohamed Mekkouri, Leandro Werra, Thomas Wolf</em> — Lulu, 2025.</p>
+                    <p>Embark on a journey to orchestrate thousands of GPUs to scale LLM training to the largest compute clusters today. Starting with the memory and compute anatomy of model training we then explore 5 dimensions of parallelism to distribute training efficiently. From there we dive deeper into how GPUs are designed and how specialised kernels help increase training efficiency further. This book is a great starting point if you want to get into training ever larger models efficiently at scale!</p>
+                </div>
+            </article>
+        </section>
+
         <section class="projects">
             <h2>Selected Work</h2>
             <article class="project">
@@ -85,10 +97,6 @@
                 <p>Found two stable FP8 pretraining recipes that pretrained a LLaMA 2 architecture in FP8 for both forward and backward passes, as well as both momentums (50% memory reduction), while matching the standard BF16 mixed-precision baseline after <a href="https://x.com/xariusrke/status/1838592991352504761">100B tokens</a> with the same pretraining learning rate as Llama 2.<br>
                     <small style="color: #666; margin-left: 2em;">Recipe 1: <a href="https://x.com/xariusrke/status/1826669126955278401" style="color: #888;">with architecture and optimizer modification</a></small><br>
                     <small style="color: #666; margin-left: 2em;">Recipe 2: <a href="https://x.com/xariusrke/status/1862237702118150363" style="color: #888;">ablated of recipe 1 without architecture modification</a></small></p>
-            </article>
-            <article class="project">
-                <h3><a href="https://huggingface.co/spaces/nanotron/ultrascale-playbook">The Ultra-Scale Playbook: Training LLMs on GPU Clusters</a> • <a href="https://www.lulu.com/shop/nouamane-tazi-and-ferdinand-mom-and-haojun-zhao-and-phuc-nguyen/the-ultra-scale-playbook/paperback/product-45yk9dj.html">🛒 order it here</a></h3>
-                <p>Nouamane Tazi, Ferdinand Mom, Haojun Zhao, <u>Phuc Nguyen</u>, Mohamed Mekkouri, Leandro Werra, Thomas Wolf.</p>
             </article>
             <article class="project">
                 <h3><a href="https://github.com/huggingface/nanotron">nanotron - Minimalistic LLM 3D-parallelism training</a> ⭐ 2.1k</h3>
