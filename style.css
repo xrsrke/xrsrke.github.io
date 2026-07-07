@@ -82,11 +82,13 @@ p {
     margin-bottom: 24px;
 }
 
-.learning-goals {
+.learning-goals,
+.more-about-me {
     margin-bottom: 16px;
 }
 
-.learning-goals > summary {
+.learning-goals > summary,
+.more-about-me > summary {
     font-size: 0.85em;
     cursor: pointer;
     list-style: none;
@@ -96,11 +98,13 @@ p {
     user-select: none;
 }
 
-.learning-goals > summary::-webkit-details-marker {
+.learning-goals > summary::-webkit-details-marker,
+.more-about-me > summary::-webkit-details-marker {
     display: none;
 }
 
-.learning-goals > summary::after {
+.learning-goals > summary::after,
+.more-about-me > summary::after {
     content: "+ click to expand";
     font-size: 0.75em;
     color: #666;
@@ -114,11 +118,13 @@ p {
     transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.learning-goals[open] > summary::after {
+.learning-goals[open] > summary::after,
+.more-about-me[open] > summary::after {
     content: "− collapse";
 }
 
-.learning-goals > summary:hover::after {
+.learning-goals > summary:hover::after,
+.more-about-me > summary:hover::after {
     background-color: #333;
     color: #fff;
     border-color: #333;
@@ -376,11 +382,13 @@ code {
         width: 140px;
     }
 
-    .learning-goals > summary {
+    .learning-goals > summary,
+    .more-about-me > summary {
         padding: 8px 0;
     }
 
-    .learning-goals > summary::after {
+    .learning-goals > summary::after,
+    .more-about-me > summary::after {
         display: inline-block;
         margin-top: 2px;
     }
