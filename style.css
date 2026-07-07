@@ -4,12 +4,27 @@
     box-sizing: border-box;
 }
 
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace;
     line-height: 1.4;
     color: #000;
     background: #fff;
     font-size: 16px;
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+a {
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .container {
@@ -348,11 +363,26 @@ code {
 
     .book {
         flex-direction: column;
-        gap: 12px;
+        gap: 14px;
+        align-items: center;
+        text-align: left;
+    }
+
+    .book-info {
+        width: 100%;
     }
 
     .book-cover {
-        width: 100px;
+        width: 140px;
+    }
+
+    .learning-goals > summary {
+        padding: 8px 0;
+    }
+
+    .learning-goals > summary::after {
+        display: inline-block;
+        margin-top: 2px;
     }
 
     .person {
@@ -366,11 +396,13 @@ code {
     }
 
     .tooltip-text {
-        width: 240px;
+        width: auto;
+        max-width: calc(100vw - 32px);
         top: auto;
         left: 50%;
         bottom: 125%;
-        margin-left: -120px;
+        transform: translateX(-50%);
+        margin-left: 0;
         margin-top: 0;
         font-size: 13px;
         text-align: center;
@@ -385,8 +417,19 @@ code {
         border-color: #333 transparent transparent transparent;
     }
 
-    .tooltip:hover .tooltip-text {
-        transform: translateY(-5px);
+    .tooltip:hover .tooltip-text,
+    .tooltip:focus .tooltip-text,
+    .tooltip:active .tooltip-text {
+        transform: translate(-50%, -5px);
+    }
+}
+
+/* Tap-to-toggle tooltips on touch devices */
+@media (hover: none) {
+    .tooltip:focus .tooltip-text,
+    .tooltip:active .tooltip-text {
+        visibility: visible;
+        opacity: 1;
     }
 }
 
