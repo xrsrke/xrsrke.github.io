@@ -12,6 +12,115 @@
             gap: 22px;
             margin-top: 4px;
         }
+        .quote-topic {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #666;
+            margin: 18px 0 -4px 0;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #eee;
+            scroll-margin-top: 20px;
+        }
+        .quote-topic:first-child {
+            margin-top: 0;
+        }
+
+        /* Table of contents */
+        .quotes-toc {
+            margin: 4px 0 24px 0;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+        .quotes-toc-label {
+            display: none;
+        }
+        .quotes-toc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .quotes-toc li {
+            margin: 0;
+        }
+        .quotes-toc a {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #666;
+            text-decoration: none;
+            padding: 5px 11px;
+            border: 1px solid #e0e0e0;
+            border-radius: 999px;
+            transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+        }
+        .quotes-toc a:hover {
+            color: #000;
+            border-color: #000;
+        }
+        .quotes-toc a.active {
+            color: #fff;
+            background: #000;
+            border-color: #000;
+        }
+
+        @media (min-width: 1024px) {
+            .quotes-toc {
+                position: fixed;
+                top: 48px;
+                left: max(24px, calc(50% - 300px - 220px));
+                width: 200px;
+                margin: 0;
+                padding: 0;
+                border-bottom: none;
+                z-index: 10;
+            }
+            .quotes-toc-label {
+                display: block;
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.12em;
+                color: #999;
+                margin-bottom: 10px;
+                padding-left: 14px;
+            }
+            .quotes-toc ul {
+                flex-direction: column;
+                gap: 0;
+                border-left: 1px solid #eee;
+            }
+            .quotes-toc a {
+                display: block;
+                padding: 7px 14px;
+                margin-left: -1px;
+                border: none;
+                border-left: 2px solid transparent;
+                border-radius: 0;
+                font-size: 13px;
+                text-transform: none;
+                letter-spacing: 0;
+                font-weight: 400;
+                color: #888;
+            }
+            .quotes-toc a:hover {
+                background: transparent;
+                border-left-color: #ccc;
+                color: #000;
+            }
+            .quotes-toc a.active {
+                background: transparent;
+                color: #000;
+                font-weight: 600;
+                border-left-color: #000;
+            }
+        }
         .quote {
             margin: 0;
         }
@@ -69,11 +178,17 @@
             <h1 class="name">Quotes</h1>
         </header>
 
+        <nav class="quotes-toc" aria-label="Quote topics">
+            <div class="quotes-toc-label">On this page</div>
+            <ul>
+                <li><a href="#success">Success</a></li>
+                <li><a href="#history">History</a></li>
+                <li><a href="#technology">Technology</a></li>
+            </ul>
+        </nav>
+
         <section class="quotes">
-            <figure class="quote">
-                <p class="quote-body">"In the future, a trillion times a trillion dollars will be spent on making antimatter to travel to other star systems."</p>
-                <figcaption class="quote-attr"><a href="https://x.com/elonmusk/status/2068041714653179981">Elon Musk</a></figcaption>
-            </figure>
+            <h2 class="quote-topic" id="success">Success</h2>
 
             <figure class="quote">
                 <p class="quote-body">"I operate on the physics approach to analysis. You boil things down to the first principles or fundamental truths in a particular area and then you reason up from there."</p>
@@ -86,48 +201,33 @@
             </figure>
 
             <figure class="quote">
-                <p class="quote-body">"The most important thing to know about prehistoric humans is that they were insignificant animals with no more impact on their environment than gorillas, fireflies or jellyfish."</p>
-                <figcaption class="quote-attr"><a href="https://cpcglobal.org/publications/Sapiens%20A%20Brief%20History%20of%20Humankind.pdf">Yuval Noah Harari, Sapiens, page 12</a></figcaption>
+                <p class="quote-body">"The most counterintuitive secret about startups is that it's often easier to succeed with a hard startup than an easy one."</p>
+                <figcaption class="quote-attr"><a href="https://blog.samaltman.com/hard-startups">Sam Altman</a></figcaption>
             </figure>
 
             <figure class="quote">
-                <p class="quote-body">"Legends, myths, gods and religions appeared for the first time with the Cognitive Revolution."</p>
-                <figcaption class="quote-attr"><a href="https://cpcglobal.org/publications/Sapiens%20A%20Brief%20History%20of%20Humankind.pdf">Yuval Noah Harari, Sapiens, page 31</a></figcaption>
+                <p class="quote-body">"It is not the critic who counts; not the man who points out how the strong man stumbles, or where the doer of deeds could have done them better. The credit belongs to the man who is actually in the arena, whose face is marred by dust and sweat and blood; who strives valiantly; who errs, who comes short again and again, because there is no effort without error and shortcoming; but who does actually strive to do the deeds; who knows great enthusiasms, the great devotions; who spends himself in a worthy cause; who at the best knows in the end the triumph of high achievement, and who at the worst, if he fails, at least fails while daring greatly, so that his place shall never be with those cold and timid souls who neither know victory nor defeat."</p>
+                <figcaption class="quote-attr"><a href="https://en.wikipedia.org/wiki/Citizenship_in_a_Republic">Theodore Roosevelt</a>, "The Man in the Arena," Sorbonne, 1910</figcaption>
             </figure>
 
             <figure class="quote">
-                <p class="quote-body">"You don't need a history to have a future."</p>
-                <figcaption class="quote-attr">Dr. Emil Harting, Bloodshot (2020)</figcaption>
+                <p class="quote-body">"Enthusiasm is common. Endurance is rare."</p>
+                <figcaption class="quote-attr">Angela Duckworth, <a href="https://www.amazon.com/Grit-Passion-Perseverance-Angela-Duckworth/dp/1501111108">Grit: The Power of Passion and Perseverance</a></figcaption>
             </figure>
 
             <figure class="quote">
-                <p class="quote-body">"Instead of dwelling on what I'd lost, I chose to focus on who I could become."</p>
-                <figcaption class="quote-attr">Dr. Emil Harting, Bloodshot (2020)</figcaption>
+                <p class="quote-body">"Without effort, your talent is nothing more than unmet potential. Without effort, your skill is nothing more than what you could have done but didn't."</p>
+                <figcaption class="quote-attr">Angela Duckworth, <a href="https://www.amazon.com/Grit-Passion-Perseverance-Angela-Duckworth/dp/1501111108">Grit: The Power of Passion and Perseverance</a></figcaption>
             </figure>
 
             <figure class="quote">
-                <p class="quote-body">"You are the creator of your own destiny. Take control and make things happen."</p>
-                <figcaption class="quote-attr">Jay Cutler</figcaption>
+                <p class="quote-body">"Yes, but the main thing is that greatness is doable. Greatness is many, many individual feats, and each of them is doable."</p>
+                <figcaption class="quote-attr">Angela Duckworth, <a href="https://www.amazon.com/Grit-Passion-Perseverance-Angela-Duckworth/dp/1501111108">Grit: The Power of Passion and Perseverance</a></figcaption>
             </figure>
 
             <figure class="quote">
-                <p class="quote-body">"Now I am become Death, the destroyer of worlds."</p>
-                <figcaption class="quote-attr"><a href="https://www.youtube.com/watch?v=lb13ynu3Iac">J. Robert Oppenheimer</a>, quoting the Bhagavad Gita after the Trinity test</figcaption>
-            </figure>
-
-            <figure class="quote">
-                <p class="quote-body">"Any sufficiently advanced technology is indistinguishable from magic."</p>
-                <figcaption class="quote-attr"><a href="https://en.wikipedia.org/wiki/Clarke%27s_three_laws">Arthur C. Clarke</a></figcaption>
-            </figure>
-
-            <figure class="quote">
-                <p class="quote-body">"There is no God. There is no Fate."</p>
-                <figcaption class="quote-attr"><a href="https://www.youtube.com/watch?v=7L7VTdzuY7Y">Stephen Hawking</a></figcaption>
-            </figure>
-
-            <figure class="quote">
-                <p class="quote-body">"He who has a why to live can bear almost any how."</p>
-                <figcaption class="quote-attr"><a href="https://en.wikipedia.org/wiki/Friedrich_Nietzsche">Friedrich Nietzsche</a>, famously quoted by Viktor Frankl</figcaption>
+                <p class="quote-body">"One characteristic emerged as a significant predictor of success. And it wasn't social intelligence. It wasn't good looks, physical health, and it wasn't I.Q. It was grit. Grit is passion and perseverance for very long-term goals. Grit is having stamina. Grit is sticking with your future, day in, day out, not just for the week, not just for the month, but for years, and working really hard to make that future a reality. Grit is living life like it's a marathon, not a sprint."</p>
+                <figcaption class="quote-attr"><a href="https://www.youtube.com/watch?v=H14bBuluwB8">Angela Lee Duckworth</a>, TED Talk</figcaption>
             </figure>
 
             <figure class="quote">
@@ -156,8 +256,57 @@
             </figure>
 
             <figure class="quote">
-                <p class="quote-body">"It is not the critic who counts; not the man who points out how the strong man stumbles, or where the doer of deeds could have done them better. The credit belongs to the man who is actually in the arena, whose face is marred by dust and sweat and blood; who strives valiantly; who errs, who comes short again and again, because there is no effort without error and shortcoming; but who does actually strive to do the deeds; who knows great enthusiasms, the great devotions; who spends himself in a worthy cause; who at the best knows in the end the triumph of high achievement, and who at the worst, if he fails, at least fails while daring greatly, so that his place shall never be with those cold and timid souls who neither know victory nor defeat."</p>
-                <figcaption class="quote-attr"><a href="https://en.wikipedia.org/wiki/Citizenship_in_a_Republic">Theodore Roosevelt</a>, "The Man in the Arena," Sorbonne, 1910</figcaption>
+                <p class="quote-body">"You don't need a history to have a future."</p>
+                <figcaption class="quote-attr">Dr. Emil Harting, Bloodshot (2020)</figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"Instead of dwelling on what I'd lost, I chose to focus on who I could become."</p>
+                <figcaption class="quote-attr">Dr. Emil Harting, Bloodshot (2020)</figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"You are the creator of your own destiny. Take control and make things happen."</p>
+                <figcaption class="quote-attr">Jay Cutler</figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"He who has a why to live can bear almost any how."</p>
+                <figcaption class="quote-attr"><a href="https://en.wikipedia.org/wiki/Friedrich_Nietzsche">Friedrich Nietzsche</a>, famously quoted by Viktor Frankl</figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"There is no God. There is no Fate."</p>
+                <figcaption class="quote-attr"><a href="https://www.youtube.com/watch?v=7L7VTdzuY7Y">Stephen Hawking</a></figcaption>
+            </figure>
+
+            <h2 class="quote-topic" id="history">History</h2>
+
+            <figure class="quote">
+                <p class="quote-body">"The most important thing to know about prehistoric humans is that they were insignificant animals with no more impact on their environment than gorillas, fireflies or jellyfish."</p>
+                <figcaption class="quote-attr"><a href="https://cpcglobal.org/publications/Sapiens%20A%20Brief%20History%20of%20Humankind.pdf">Yuval Noah Harari, Sapiens, page 12</a></figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"Legends, myths, gods and religions appeared for the first time with the Cognitive Revolution."</p>
+                <figcaption class="quote-attr"><a href="https://cpcglobal.org/publications/Sapiens%20A%20Brief%20History%20of%20Humankind.pdf">Yuval Noah Harari, Sapiens, page 31</a></figcaption>
+            </figure>
+
+            <h2 class="quote-topic" id="technology">Technology</h2>
+
+            <figure class="quote">
+                <p class="quote-body">"In the future, a trillion times a trillion dollars will be spent on making antimatter to travel to other star systems."</p>
+                <figcaption class="quote-attr"><a href="https://x.com/elonmusk/status/2068041714653179981">Elon Musk</a></figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"Now I am become Death, the destroyer of worlds."</p>
+                <figcaption class="quote-attr"><a href="https://www.youtube.com/watch?v=lb13ynu3Iac">J. Robert Oppenheimer</a>, quoting the Bhagavad Gita after the Trinity test</figcaption>
+            </figure>
+
+            <figure class="quote">
+                <p class="quote-body">"Any sufficiently advanced technology is indistinguishable from magic."</p>
+                <figcaption class="quote-attr"><a href="https://en.wikipedia.org/wiki/Clarke%27s_three_laws">Arthur C. Clarke</a></figcaption>
             </figure>
 
             <figure class="quote">
@@ -174,6 +323,42 @@
 
     </main>
 </body>
+
+<script>
+    (function () {
+        const sections = document.querySelectorAll('.quote-topic');
+        const links = document.querySelectorAll('.quotes-toc a');
+
+        function setActive(id) {
+            links.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+            });
+        }
+
+        if ('IntersectionObserver' in window && sections.length) {
+            const observer = new IntersectionObserver((entries) => {
+                const visible = entries
+                    .filter(e => e.isIntersecting)
+                    .sort((a, b) => a.target.getBoundingClientRect().top - b.target.getBoundingClientRect().top);
+                if (visible.length) setActive(visible[0].target.id);
+            }, { rootMargin: '-10% 0px -70% 0px', threshold: 0 });
+            sections.forEach(s => observer.observe(s));
+        }
+
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    history.replaceState(null, '', href);
+                    setActive(href.slice(1));
+                }
+            });
+        });
+    })();
+</script>
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NKWSNHSJ2F"></script>
