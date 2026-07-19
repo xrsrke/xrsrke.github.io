@@ -5,6 +5,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favorite Reading - Phuc Nguyen</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .reading-topic {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #666;
+            margin: 18px 0 8px 0;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #eee;
+            scroll-margin-top: 20px;
+        }
+        .reading-toc + .people .reading-topic:first-child,
+        header + .people .reading-topic:first-child {
+            margin-top: 32px;
+        }
+        .people + .people {
+            margin-top: 40px;
+        }
+
+        /* Table of contents */
+        .reading-toc {
+            margin: 4px 0 24px 0;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+        .reading-toc-label {
+            display: none;
+        }
+        .reading-toc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .reading-toc li {
+            margin: 0;
+        }
+        .reading-toc a {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #666;
+            text-decoration: none;
+            padding: 5px 11px;
+            border: 1px solid #e0e0e0;
+            border-radius: 999px;
+            transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+        }
+        .reading-toc a:hover {
+            color: #000;
+            border-color: #000;
+        }
+        .reading-toc a.active {
+            color: #fff;
+            background: #000;
+            border-color: #000;
+        }
+
+        @media (min-width: 1024px) {
+            .reading-toc {
+                position: fixed;
+                top: 48px;
+                left: max(24px, calc(50% - 300px - 220px));
+                width: 200px;
+                margin: 0;
+                padding: 0;
+                border-bottom: none;
+                z-index: 10;
+            }
+            .reading-toc-label {
+                display: block;
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.12em;
+                color: #999;
+                margin-bottom: 10px;
+                padding-left: 14px;
+            }
+            .reading-toc ul {
+                flex-direction: column;
+                gap: 0;
+                border-left: 1px solid #eee;
+            }
+            .reading-toc a {
+                display: block;
+                padding: 7px 14px;
+                margin-left: -1px;
+                border: none;
+                border-left: 2px solid transparent;
+                border-radius: 0;
+                font-size: 13px;
+                text-transform: none;
+                letter-spacing: 0;
+                font-weight: 400;
+                color: #888;
+            }
+            .reading-toc a:hover {
+                background: transparent;
+                border-left-color: #ccc;
+                color: #000;
+            }
+            .reading-toc a.active {
+                background: transparent;
+                color: #000;
+                font-weight: 600;
+                border-left-color: #000;
+            }
+        }
+    </style>
 </head>
 <body>
     <main class="container">
@@ -12,10 +127,20 @@
             <nav class="nav-links">
                 <a href="index.html">← Back to Home</a>
             </nav>
-            <h1 class="name">Reading</h1>
+            <h1 class="name">Favorite Reading</h1>
         </header>
 
+        <nav class="reading-toc" aria-label="Reading sections">
+            <div class="reading-toc-label">On this page</div>
+            <ul>
+                <li><a href="#books">Books</a></li>
+                <li><a href="#articles">Articles</a></li>
+                <li><a href="#papers">Papers</a></li>
+            </ul>
+        </nav>
+
         <section class="people">
+            <h2 class="reading-topic" id="books">Books</h2>
             <p><small>Book count: 63</small></p>
             <p><small>These are some of the books that I recalled that I have read, but not all of them</small></p>
             <p><a href="https://www.amazon.com/168-Hours-Have-More-Think/dp/159184410X">168 Hours: You Have More Time Than You Think</a> by Laura Vanderkam</p>
@@ -84,14 +209,15 @@
         </section>
 
         <section class="people">
-            <h2>Articles</h2>
+            <h2 class="reading-topic" id="articles">Articles</h2>
             <p><a href="https://www.wired.com/story/what-openai-really-wants/">What OpenAI Really Wants</a>. <i>Wired</i>.</p>
             <p><a href="https://www.wired.com/story/elon-musk-tesla-life-inside-gigafactory/">Elon Musk: Tesla, SpaceX, and the Quest for a Fantastic Future - Life Inside the Gigafactory</a>. <i>Wired</i>.</p>
             <p><a href="https://blog.samaltman.com/hard-startups">Hard Startups</a> by Sam Altman.</p>
+            <p><a href="https://x.com/adeoressi/status/2063327234929447277">The intervention to stop Elon from starting SpaceX</a> by Adeo Ressi.</p>
         </section>
 
         <section class="people">
-            <h2>Reading</h2>
+            <h2 class="reading-topic" id="papers">Papers</h2>
             <p>Ericsson, K. A., Krampe, R. T., & Tesch-Römer, C. (1993). <a href="https://graphics8.nytimes.com/images/blogs/freakonomics/pdf/DeliberatePractice(PsychologicalReview).pdf">The role of deliberate practice in the acquisition of expert performance</a>. <i>Psychological Review</i>, 100(3), 363-406.</p>
             <p>Duckworth, A. L., Peterson, C., Matthews, M. D., & Kelly, D. R. (2007). <a href="https://gwern.net/doc/psychology/personality/conscientiousness/2007-duckworth.pdf">Grit: Perseverance and passion for long-term goals</a>. <i>Journal of Personality and Social Psychology</i>, 92(6), 1087-1101.</p>
             <p>Losch, S., Traut-Mattausch, E., Mühlberger, M. D., & Jonas, E. (2016). <a href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2016.00629/full">Comparing the Effectiveness of Individual Coaching, Self-Coaching, and Group Training: How Leadership Makes the Difference</a>. <i>Frontiers in Psychology</i>, 7, 629.</p>
