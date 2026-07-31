@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite Organizations - Phuc Nguyen</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .org-topic {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #666;
+            margin: 24px 0 8px 0;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #eee;
+            scroll-margin-top: 20px;
+        }
+        .org-toc + .people .org-topic:first-child,
+        header + .people .org-topic:first-child {
+            margin-top: 32px;
+        }
+
+        /* Table of contents */
+        .org-toc {
+            margin: 4px 0 24px 0;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+        .org-toc-label {
+            display: none;
+        }
+        .org-toc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .org-toc li {
+            margin: 0;
+        }
+        .org-toc a {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #666;
+            text-decoration: none;
+            padding: 5px 11px;
+            border: 1px solid #e0e0e0;
+            border-radius: 999px;
+            transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+        }
+        .org-toc a:hover {
+            color: #000;
+            border-color: #000;
+        }
+        .org-toc a.active {
+            color: #fff;
+            background: #000;
+            border-color: #000;
+        }
+
+        @media (min-width: 1024px) {
+            .org-toc {
+                position: fixed;
+                top: 48px;
+                left: max(24px, calc(50% - 300px - 220px));
+                width: 200px;
+                margin: 0;
+                padding: 0;
+                border-bottom: none;
+                z-index: 10;
+            }
+            .org-toc-label {
+                display: block;
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.12em;
+                color: #999;
+                margin-bottom: 10px;
+                padding-left: 14px;
+            }
+            .org-toc ul {
+                flex-direction: column;
+                gap: 0;
+                border-left: 1px solid #eee;
+            }
+            .org-toc a {
+                display: block;
+                padding: 7px 14px;
+                margin-left: -1px;
+                border: none;
+                border-left: 2px solid transparent;
+                border-radius: 0;
+                font-size: 13px;
+                text-transform: none;
+                letter-spacing: 0;
+                font-weight: 400;
+                color: #888;
+            }
+            .org-toc a:hover {
+                background: transparent;
+                border-left-color: #ccc;
+                color: #000;
+            }
+            .org-toc a.active {
+                background: transparent;
+                color: #000;
+                font-weight: 600;
+                border-left-color: #000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header>
+            <nav class="nav-links">
+                <a href="index.html">← Back to Home</a>
+            </nav>
+            <h1 class="name">Favorite Organizations</h1>
+        </header>
+
+        <nav class="org-toc" aria-label="Organization sections">
+            <div class="org-toc-label">On this page</div>
+            <ul>
+                <li><a href="#companies">Companies</a></li>
+                <li><a href="#organizations">Organizations</a></li>
+            </ul>
+        </nav>
+
+        <section class="people">
+            <h2 class="org-topic" id="companies">Companies</h2>
+            <p><a href="https://neuralink.com/">Neuralink</a>: Direct read/write to the cortex, increase bandwidth to the brain</p>
+            <p><a href="https://www.spacex.com/">SpaceX</a>: Making humanity multi-planetary</p>
+            <p><a href="https://www.anduril.com/">Anduril</a>: Rebuilding the Western defense industrial base</p>
+            <p><a href="https://openai.com/">OpenAI</a> / <a href="https://deepmind.google/">DeepMind</a> / <a href="https://www.anthropic.com/">Anthropic</a> / <a href="https://x.ai/">xAI</a>: Artificial general intelligence</p>
+            <p><a href="https://www.helionenergy.com/">Helion Energy</a>: Commercial fusion power</p>
+            <p><a href="https://www.starcloud.com/">Starcloud</a>: Putting data centers in Earth's orbit</p>
+
+            <h2 class="org-topic" id="organizations">Organizations</h2>
+            <p><a href="https://futureoflife.org/our-mission/">Future of Life Institute</a>: Steering transformative technology towards benefiting life</p>
+            <p><a href="https://www.khanacademy.org/">Khan Academy</a>: A free, world-class education for anyone, anywhere</p>
+            <p><a href="https://en.wikipedia.org/wiki/Manhattan_Project">Manhattan Project</a>: Mobilizing the greatest scientific minds toward a civilization-defining goal</p>
+            <p><a href="https://www.muskfoundation.org/">Musk Foundation</a>: Public philanthropy for science, engineering, and the development of artificial intelligence</p>
+        </section>
+
+    </main>
+</body>
+
+<script>
+    (function () {
+        const sections = document.querySelectorAll('.org-topic');
+        const links = document.querySelectorAll('.org-toc a');
+
+        function setActive(id) {
+            links.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+            });
+        }
+
+        if ('IntersectionObserver' in window && sections.length) {
+            const observer = new IntersectionObserver((entries) => {
+                const visible = entries
+                    .filter(e => e.isIntersecting)
+                    .sort((a, b) => a.target.getBoundingClientRect().top - b.target.getBoundingClientRect().top);
+                if (visible.length) setActive(visible[0].target.id);
+            }, { rootMargin: '-10% 0px -70% 0px', threshold: 0 });
+            sections.forEach(s => observer.observe(s));
+        }
+
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    history.replaceState(null, '', href);
+                    setActive(href.slice(1));
+                }
+            });
+        });
+    })();
+</script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NKWSNHSJ2F"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NKWSNHSJ2F');
+</script>
+
+
+</html>

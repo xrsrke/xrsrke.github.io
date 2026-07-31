@@ -301,6 +301,14 @@ code {
     border-bottom: 1px solid #eee;
 }
 
+.last-updated {
+    font-size: 11px;
+    color: #aaa;
+    font-style: italic;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
 .person {
     margin-bottom: 20px;
     padding-bottom: 16px;

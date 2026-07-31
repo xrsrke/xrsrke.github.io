@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human Progress Timeline - Phuc Nguyen</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .timeline p {
+            display: flex;
+            gap: 14px;
+            align-items: baseline;
+            margin: 10px 0;
+            scroll-margin-top: 24px;
+        }
+        .timeline .year {
+            flex: 0 0 170px;
+            font-weight: 600;
+            color: #666;
+            font-variant-numeric: tabular-nums;
+        }
+        .timeline .event {
+            flex: 1;
+        }
+
+        /* Horizontal bar timeline */
+        .timeline-bar-section {
+            margin: 40px 0 56px 0;
+            padding: 40px 0 32px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+        .timeline-bar-heading {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #999;
+            margin: 0 0 60px 0;
+            text-align: center;
+        }
+        .timeline-bar {
+            position: relative;
+            height: 240px;
+            margin: 0 6%;
+        }
+        .timeline-axis {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, #e5e5e5, #bbb 8%, #bbb 92%, #e5e5e5);
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+        .timeline-axis::before,
+        .timeline-axis::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #bbb;
+            transform: translateY(-50%);
+        }
+        .timeline-axis::before { left: -3px; }
+        .timeline-axis::after { right: -3px; }
+        .timeline-event {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            text-decoration: none;
+            color: inherit;
+        }
+        .event-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #111;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 1px #111;
+            transition: transform 0.15s ease;
+        }
+        .timeline-event:hover .event-dot {
+            transform: scale(1.25);
+        }
+        .event-label {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            width: max-content;
+            max-width: 100px;
+        }
+        .event-label::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            width: 1px;
+            background: #ccc;
+        }
+        .event-label.above {
+            bottom: 22px;
+        }
+        .event-label.above::before {
+            top: 100%;
+            height: 12px;
+        }
+        .event-label.above.tier-2 {
+            bottom: 78px;
+        }
+        .event-label.above.tier-2::before {
+            top: 100%;
+            height: 68px;
+        }
+        .event-label.below {
+            top: 22px;
+        }
+        .event-label.below::before {
+            bottom: 100%;
+            height: 12px;
+        }
+        .event-label.below.tier-2 {
+            top: 78px;
+        }
+        .event-label.below.tier-2::before {
+            bottom: 100%;
+            height: 68px;
+        }
+        .event-year {
+            font-size: 12px;
+            font-weight: 600;
+            color: #111;
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 3px;
+            line-height: 1.2;
+        }
+        .event-name {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.35;
+        }
+        .timeline-bar-note {
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            margin-top: 12px;
+            font-style: italic;
+        }
+        .last-updated {
+            margin-top: 48px;
+            font-size: 11px;
+            color: #aaa;
+            text-align: right;
+            font-style: italic;
+        }
+
+        @media (max-width: 640px) {
+            .timeline-bar {
+                margin: 0 6%;
+                height: 240px;
+            }
+            .event-year {
+                font-size: 10px;
+            }
+            .event-name {
+                font-size: 9px;
+                max-width: 90px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header>
+            <nav class="nav-links">
+                <a href="index.html">← Back to Home</a>
+            </nav>
+            <h1 class="name">Human Progress Timeline</h1>
+            <p class="subtitle">Moments I appreciate as meaningful contributions to human progress.</p>
+            <p class="last-updated">Last updated: July 31, 2026</p>
+        </header>
+
+        <section class="timeline-bar-section" aria-label="Timeline overview">
+            <div class="timeline-bar-heading">At a Glance</div>
+            <div class="timeline-bar">
+                <div class="timeline-axis"></div>
+
+                <a class="timeline-event" style="left: 3%;" href="#big-bang">
+                    <div class="event-label above">
+                        <div class="event-year">13.5 billion years ago</div>
+                        <div class="event-name">Physics & Chemistry</div>
+                    </div>
+                    <div class="event-dot"></div>
+                </a>
+
+                <a class="timeline-event" style="left: 10%;" href="#first-life">
+                    <div class="event-label below">
+                        <div class="event-year">~4 billion years ago</div>
+                        <div class="event-name">Earth & First Life</div>
+                    </div>
+                    <div class="event-dot"></div>
+                </a>
+
+                <a class="timeline-event" style="left: 47%;" href="#fire">
+                    <div class="event-label above tier-2">
+                        <div class="event-year">~300,000 years ago</div>
+                        <div class="event-name">Mastery of Fire</div>
+                    </div>
+                    <div class="event-dot"></div>
+                </a>
+
+                <a class="timeline-event" style="left: 54%;" href="#cognitive-revolution">
+                    <div class="event-label below">
+                        <div class="event-year">~70,000 BCE</div>
+                        <div class="event-name">Cognitive Revolution</div>
+                    </div>
+                    <div class="event-dot"></div>
+                </a>
+
+                <a class="timeline-event" style="left: 62%;" href="#agricultural-revolution">
+                    <div class="event-label above">
+                        <div class="event-year">~10,000 BCE</div>
+                        <div class="event-name">Agriculture &amp; Civilization</div>
+                    </div>
+                    <div class="event-dot"></div>
+                </a>
+
+                <a class="timeline-event" style="left: 80%;" href="#scientific-revolution">
+                    <div class="event-label below">
+                        <div class="event-year">1500–1800</div>
+                        <div class="event-name">Scientific &amp; Industrial Age</div>
+                    </div>
+                    <div class="event-dot"></div>
+                </a>
+
+                <a class="timeline-event" style="left: 95%;" href="#starship">
+                    <div class="event-label above">
+                        <div class="event-year">2023</div>
+                        <div class="event-name">Starship's First Flight</div>
+                    </div>
+                    <div class="event-dot"></div>
+                </a>
+            </div>
+            <p class="timeline-bar-note">Log scale — spacing reflects the accelerating pace of change.</p>
+        </section>
+
+        <section class="timeline">
+            <p id="big-bang"><span class="year">13.5 billion years ago</span><span class="event"><a href="https://en.wikipedia.org/wiki/Big_Bang">Matter and energy appear</a> — the beginning of physics. Soon after, atoms and molecules form: the beginning of chemistry.</span></p>
+            <p id="earth-formation"><span class="year">4.5 billion years ago</span><span class="event"><a href="https://en.wikipedia.org/wiki/History_of_Earth">Formation of planet Earth</a>.</span></p>
+            <p id="first-life"><span class="year">3.8 billion years ago</span><span class="event"><a href="https://en.wikipedia.org/wiki/Earliest_known_life_forms">Emergence of the first organisms</a> — the beginning of biology.</span></p>
+            <p id="fire"><span class="year">~300,000 years ago</span><span class="event"><a href="https://en.wikipedia.org/wiki/Control_of_fire_by_early_humans">Daily use of fire</a> — the first technology that let humans reshape the world outside their bodies.</span></p>
+            <p id="cognitive-revolution"><span class="year">~70,000 BCE</span><span class="event"><a href="https://en.wikipedia.org/wiki/Behavioral_modernity">Cognitive Revolution</a> — <em>Homo sapiens</em> begins to think and communicate in wholly new ways: symbolic language, shared fictions, and cooperation at scale.</span></p>
+            <p id="agricultural-revolution"><span class="year">~10,000 BCE</span><span class="event"><a href="https://en.wikipedia.org/wiki/Neolithic_Revolution">Agricultural Revolution</a> — humans start domesticating plants and animals; the shift from foraging to farming.</span></p>
+            <p id="first-kingdoms"><span class="year">~5,000 BCE</span><span class="event"><a href="https://en.wikipedia.org/wiki/Cradle_of_civilization">First kingdoms, script, and money</a>; polytheistic religions.</span></p>
+            <p id="scientific-revolution"><span class="year">~1500 CE</span><span class="event"><a href="https://en.wikipedia.org/wiki/Scientific_Revolution">The Scientific Revolution</a> — humankind admits its ignorance and begins to acquire unprecedented power.</span></p>
+            <p id="newton-principia"><span class="year">1687</span><span class="event"><a href="https://en.wikipedia.org/wiki/Philosophi%C3%A6_Naturalis_Principia_Mathematica">Newton publishes <em>Principia Mathematica</em></a> — laws of motion and universal gravitation.</span></p>
+            <p id="industrial-revolution"><span class="year">~1760</span><span class="event"><a href="https://en.wikipedia.org/wiki/Industrial_Revolution">Industrial Revolution</a> — steam power, mechanized production, and the beginning of sustained exponential economic growth.</span></p>
+            <p id="starship"><span class="year">2023</span><span class="event"><a href="https://en.wikipedia.org/wiki/Starship_flight_test_1">First flight of SpaceX Starship</a> — a reusable rocket built to make Mars travel affordable and humanity multi-planetary.</span></p>
+        </section>
+
+    </main>
+</body>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NKWSNHSJ2F"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NKWSNHSJ2F');
+</script>
+
+
+</html>
