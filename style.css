@@ -130,6 +130,133 @@ p {
     border-color: #333;
 }
 
+.citations {
+    display: inline;
+    font-weight: normal;
+}
+
+.citations > summary {
+    cursor: pointer;
+    list-style: none;
+    display: inline-block;
+    user-select: none;
+    font-size: 0.7em;
+    color: #666;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    padding: 1px 7px;
+    margin-left: 6px;
+    vertical-align: middle;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    letter-spacing: 0.02em;
+}
+
+.citations > summary::-webkit-details-marker {
+    display: none;
+}
+
+.citations > summary::before {
+    content: "+ ";
+    color: #999;
+}
+
+.citations[open] > summary::before {
+    content: "− ";
+}
+
+.citations > summary:hover,
+.citations[open] > summary {
+    background-color: #333;
+    color: #fff;
+    border-color: #333;
+}
+
+.citations > summary:hover::before,
+.citations[open] > summary::before {
+    color: #fff;
+}
+
+.cite-panel {
+    display: block;
+    margin-top: 10px;
+    padding: 12px 14px;
+    background-color: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+.cite-intro {
+    font-size: 0.85em;
+    color: #555;
+    margin: 0 0 8px 0;
+    font-weight: normal;
+}
+
+.cite-intro-second {
+    margin-top: 14px;
+}
+
+.org-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.citation-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.citation-list li {
+    margin-bottom: 8px;
+    font-size: 0.85em;
+    line-height: 1.5;
+}
+
+.citation-list li:last-child {
+    margin-bottom: 0;
+}
+
+.citation-list a {
+    color: #333;
+}
+
+.cite-meta {
+    color: #888;
+    font-size: 0.9em;
+    margin: 0 6px 0 4px;
+}
+
+.cite-org {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75em;
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    padding: 1px 6px 1px 4px;
+    vertical-align: middle;
+    text-decoration: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+a.cite-org:hover {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+}
+
+.cite-org img {
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+    display: block;
+}
+
 .socials {
     display: flex;
     flex-wrap: wrap;
