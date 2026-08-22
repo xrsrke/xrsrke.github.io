@@ -179,6 +179,10 @@ p {
     border-radius: 4px;
 }
 
+.cite-panel[hidden] {
+    display: none;
+}
+
 .cite-intro {
     font-size: 0.85em;
     color: #555;
