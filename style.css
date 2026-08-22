@@ -130,16 +130,12 @@ p {
     border-color: #333;
 }
 
-.citations {
-    display: inline;
-    font-weight: normal;
-}
-
-.citations > summary {
+.citations-toggle {
     cursor: pointer;
-    list-style: none;
-    display: inline-block;
     user-select: none;
+    display: inline-block;
+    font-family: inherit;
+    font-weight: normal;
     font-size: 0.7em;
     color: #666;
     background-color: #f5f5f5;
@@ -150,30 +146,27 @@ p {
     vertical-align: middle;
     transition: background-color 0.15s ease, color 0.15s ease;
     letter-spacing: 0.02em;
+    line-height: 1.4;
 }
 
-.citations > summary::-webkit-details-marker {
-    display: none;
-}
-
-.citations > summary::before {
+.citations-toggle::before {
     content: "+ ";
     color: #999;
 }
 
-.citations[open] > summary::before {
+.citations-toggle[aria-expanded="true"]::before {
     content: "− ";
 }
 
-.citations > summary:hover,
-.citations[open] > summary {
+.citations-toggle:hover,
+.citations-toggle[aria-expanded="true"] {
     background-color: #333;
     color: #fff;
     border-color: #333;
 }
 
-.citations > summary:hover::before,
-.citations[open] > summary::before {
+.citations-toggle:hover::before,
+.citations-toggle[aria-expanded="true"]::before {
     color: #fff;
 }
 
