@@ -172,66 +172,70 @@
         }
     </style>
 </head>
+<!--
+    i18n: every translatable element carries a `data-fr` attribute with its
+    French innerHTML. When editing English text, ALSO update `data-fr`.
+-->
 <body>
     <main class="container">
         <header>
             <nav class="nav-links">
-                <a href="index.html">← Back to Home</a>
+                <a href="index.html" data-fr="← Retour à l'accueil">← Back to Home</a>
             </nav>
-            <h1 class="name">Human Progress Timeline</h1>
-            <p class="subtitle">Moments I appreciate as meaningful contributions to human progress.</p>
-            <p class="last-updated">Last updated: July 31, 2026</p>
+            <h1 class="name" data-fr="Chronologie du Progrès Humain">Human Progress Timeline</h1>
+            <p class="subtitle" data-fr="Moments que j'estime comme des contributions significatives au progrès humain.">Moments I appreciate as meaningful contributions to human progress.</p>
+            <p class="last-updated" data-fr="Dernière mise à jour : 31 juillet 2026">Last updated: July 31, 2026</p>
         </header>
 
         <section class="timeline-bar-section" aria-label="Timeline overview">
-            <div class="timeline-bar-heading">At a Glance</div>
+            <div class="timeline-bar-heading" data-fr="Vue d'ensemble">At a Glance</div>
             <div class="timeline-bar">
                 <div class="timeline-axis"></div>
 
                 <a class="timeline-event" style="left: 3%;" href="#big-bang">
                     <div class="event-label above">
-                        <div class="event-year">13.5 billion years ago</div>
-                        <div class="event-name">Physics & Chemistry</div>
+                        <div class="event-year" data-fr="il y a 13,5 milliards d'années">13.5 billion years ago</div>
+                        <div class="event-name" data-fr="Physique & Chimie">Physics & Chemistry</div>
                     </div>
                     <div class="event-dot"></div>
                 </a>
 
                 <a class="timeline-event" style="left: 10%;" href="#first-life">
                     <div class="event-label below">
-                        <div class="event-year">~4 billion years ago</div>
-                        <div class="event-name">Earth & First Life</div>
+                        <div class="event-year" data-fr="il y a ~4 milliards d'années">~4 billion years ago</div>
+                        <div class="event-name" data-fr="Terre & Premières Formes de Vie">Earth & First Life</div>
                     </div>
                     <div class="event-dot"></div>
                 </a>
 
                 <a class="timeline-event" style="left: 47%;" href="#fire">
                     <div class="event-label above tier-2">
-                        <div class="event-year">~300,000 years ago</div>
-                        <div class="event-name">Mastery of Fire</div>
+                        <div class="event-year" data-fr="il y a ~300 000 ans">~300,000 years ago</div>
+                        <div class="event-name" data-fr="Maîtrise du Feu">Mastery of Fire</div>
                     </div>
                     <div class="event-dot"></div>
                 </a>
 
                 <a class="timeline-event" style="left: 54%;" href="#cognitive-revolution">
                     <div class="event-label below">
-                        <div class="event-year">~70,000 BCE</div>
-                        <div class="event-name">Cognitive Revolution</div>
+                        <div class="event-year" data-fr="~70 000 av. J.-C.">~70,000 BCE</div>
+                        <div class="event-name" data-fr="Révolution Cognitive">Cognitive Revolution</div>
                     </div>
                     <div class="event-dot"></div>
                 </a>
 
                 <a class="timeline-event" style="left: 62%;" href="#agricultural-revolution">
                     <div class="event-label above">
-                        <div class="event-year">~10,000 BCE</div>
-                        <div class="event-name">Agriculture &amp; Civilization</div>
+                        <div class="event-year" data-fr="~10 000 av. J.-C.">~10,000 BCE</div>
+                        <div class="event-name" data-fr="Agriculture &amp; Civilisation">Agriculture &amp; Civilization</div>
                     </div>
                     <div class="event-dot"></div>
                 </a>
 
                 <a class="timeline-event" style="left: 80%;" href="#scientific-revolution">
                     <div class="event-label below">
-                        <div class="event-year">1500–1800</div>
-                        <div class="event-name">Scientific &amp; Industrial Age</div>
+                        <div class="event-year" data-fr="1500–1800">1500–1800</div>
+                        <div class="event-name" data-fr="Ère Scientifique &amp; Industrielle">Scientific &amp; Industrial Age</div>
                     </div>
                     <div class="event-dot"></div>
                 </a>
@@ -239,29 +243,30 @@
                 <a class="timeline-event" style="left: 95%;" href="#starship">
                     <div class="event-label above">
                         <div class="event-year">2023</div>
-                        <div class="event-name">Starship's First Flight</div>
+                        <div class="event-name" data-fr="Premier Vol de Starship">Starship's First Flight</div>
                     </div>
                     <div class="event-dot"></div>
                 </a>
             </div>
-            <p class="timeline-bar-note">Log scale — spacing reflects the accelerating pace of change.</p>
+            <p class="timeline-bar-note" data-fr="Échelle logarithmique — l'espacement reflète le rythme accéléré du changement.">Log scale — spacing reflects the accelerating pace of change.</p>
         </section>
 
         <section class="timeline">
-            <p id="big-bang"><span class="year">13.5 billion years ago</span><span class="event"><a href="https://en.wikipedia.org/wiki/Big_Bang">Matter and energy appear</a> — the beginning of physics. Soon after, atoms and molecules form: the beginning of chemistry.</span></p>
-            <p id="earth-formation"><span class="year">4.5 billion years ago</span><span class="event"><a href="https://en.wikipedia.org/wiki/History_of_Earth">Formation of planet Earth</a>.</span></p>
-            <p id="first-life"><span class="year">3.8 billion years ago</span><span class="event"><a href="https://en.wikipedia.org/wiki/Earliest_known_life_forms">Emergence of the first organisms</a> — the beginning of biology.</span></p>
-            <p id="fire"><span class="year">~300,000 years ago</span><span class="event"><a href="https://en.wikipedia.org/wiki/Control_of_fire_by_early_humans">Daily use of fire</a> — the first technology that let humans reshape the world outside their bodies.</span></p>
-            <p id="cognitive-revolution"><span class="year">~70,000 BCE</span><span class="event"><a href="https://en.wikipedia.org/wiki/Behavioral_modernity">Cognitive Revolution</a> — <em>Homo sapiens</em> begins to think and communicate in wholly new ways: symbolic language, shared fictions, and cooperation at scale.</span></p>
-            <p id="agricultural-revolution"><span class="year">~10,000 BCE</span><span class="event"><a href="https://en.wikipedia.org/wiki/Neolithic_Revolution">Agricultural Revolution</a> — humans start domesticating plants and animals; the shift from foraging to farming.</span></p>
-            <p id="first-kingdoms"><span class="year">~5,000 BCE</span><span class="event"><a href="https://en.wikipedia.org/wiki/Cradle_of_civilization">First kingdoms, script, and money</a>; polytheistic religions.</span></p>
-            <p id="scientific-revolution"><span class="year">~1500 CE</span><span class="event"><a href="https://en.wikipedia.org/wiki/Scientific_Revolution">The Scientific Revolution</a> — humankind admits its ignorance and begins to acquire unprecedented power.</span></p>
-            <p id="newton-principia"><span class="year">1687</span><span class="event"><a href="https://en.wikipedia.org/wiki/Philosophi%C3%A6_Naturalis_Principia_Mathematica">Newton publishes <em>Principia Mathematica</em></a> — laws of motion and universal gravitation.</span></p>
-            <p id="industrial-revolution"><span class="year">~1760</span><span class="event"><a href="https://en.wikipedia.org/wiki/Industrial_Revolution">Industrial Revolution</a> — steam power, mechanized production, and the beginning of sustained exponential economic growth.</span></p>
-            <p id="starship"><span class="year">2023</span><span class="event"><a href="https://en.wikipedia.org/wiki/Starship_flight_test_1">First flight of SpaceX Starship</a> — a reusable rocket built to make Mars travel affordable and humanity multi-planetary.</span></p>
+            <p id="big-bang"><span class="year" data-fr="il y a 13,5 milliards d'années">13.5 billion years ago</span><span class="event" data-fr="<a href=&quot;https://en.wikipedia.org/wiki/Big_Bang&quot;>Apparition de la matière et de l'énergie</a> — le début de la physique. Peu après, les atomes et molécules se forment : le début de la chimie."><a href="https://en.wikipedia.org/wiki/Big_Bang">Matter and energy appear</a> — the beginning of physics. Soon after, atoms and molecules form: the beginning of chemistry.</span></p>
+            <p id="earth-formation"><span class="year" data-fr="il y a 4,5 milliards d'années">4.5 billion years ago</span><span class="event" data-fr="<a href=&quot;https://en.wikipedia.org/wiki/History_of_Earth&quot;>Formation de la planète Terre</a>."><a href="https://en.wikipedia.org/wiki/History_of_Earth">Formation of planet Earth</a>.</span></p>
+            <p id="first-life"><span class="year" data-fr="il y a 3,8 milliards d'années">3.8 billion years ago</span><span class="event" data-fr="<a href=&quot;https://en.wikipedia.org/wiki/Earliest_known_life_forms&quot;>Émergence des premiers organismes</a> — le début de la biologie."><a href="https://en.wikipedia.org/wiki/Earliest_known_life_forms">Emergence of the first organisms</a> — the beginning of biology.</span></p>
+            <p id="fire"><span class="year" data-fr="il y a ~300 000 ans">~300,000 years ago</span><span class="event" data-fr="<a href=&quot;https://en.wikipedia.org/wiki/Control_of_fire_by_early_humans&quot;>Usage quotidien du feu</a> — la première technologie ayant permis aux humains de remodeler le monde hors de leur corps."><a href="https://en.wikipedia.org/wiki/Control_of_fire_by_early_humans">Daily use of fire</a> — the first technology that let humans reshape the world outside their bodies.</span></p>
+            <p id="cognitive-revolution"><span class="year" data-fr="~70 000 av. J.-C.">~70,000 BCE</span><span class="event" data-fr="<a href=&quot;https://en.wikipedia.org/wiki/Behavioral_modernity&quot;>Révolution cognitive</a> — <em>Homo sapiens</em> commence à penser et à communiquer de manières totalement nouvelles : langage symbolique, fictions partagées et coopération à grande échelle."><a href="https://en.wikipedia.org/wiki/Behavioral_modernity">Cognitive Revolution</a> — <em>Homo sapiens</em> begins to think and communicate in wholly new ways: symbolic language, shared fictions, and cooperation at scale.</span></p>
+            <p id="agricultural-revolution"><span class="year" data-fr="~10 000 av. J.-C.">~10,000 BCE</span><span class="event" data-fr="<a href=&quot;https://en.wikipedia.org/wiki/Neolithic_Revolution&quot;>Révolution agricole</a> — les humains commencent à domestiquer plantes et animaux ; passage de la cueillette à l'agriculture."><a href="https://en.wikipedia.org/wiki/Neolithic_Revolution">Agricultural Revolution</a> — humans start domesticating plants and animals; the shift from foraging to farming.</span></p>
+            <p id="first-kingdoms"><span class="year" data-fr="~5 000 av. J.-C.">~5,000 BCE</span><span class="event" data-fr="<a href=&quot;https://en.wikipedia.org/wiki/Cradle_of_civilization&quot;>Premiers royaumes, écriture et monnaie</a> ; religions polythéistes."><a href="https://en.wikipedia.org/wiki/Cradle_of_civilization">First kingdoms, script, and money</a>; polytheistic religions.</span></p>
+            <p id="scientific-revolution"><span class="year" data-fr="~1500 apr. J.-C.">~1500 CE</span><span class="event" data-fr="<a href=&quot;https://en.wikipedia.org/wiki/Scientific_Revolution&quot;>La Révolution scientifique</a> — l'humanité admet son ignorance et commence à acquérir un pouvoir sans précédent."><a href="https://en.wikipedia.org/wiki/Scientific_Revolution">The Scientific Revolution</a> — humankind admits its ignorance and begins to acquire unprecedented power.</span></p>
+            <p id="newton-principia"><span class="year">1687</span><span class="event" data-fr="<a href=&quot;https://en.wikipedia.org/wiki/Philosophi%C3%A6_Naturalis_Principia_Mathematica&quot;>Newton publie <em>Principia Mathematica</em></a> — lois du mouvement et gravitation universelle."><a href="https://en.wikipedia.org/wiki/Philosophi%C3%A6_Naturalis_Principia_Mathematica">Newton publishes <em>Principia Mathematica</em></a> — laws of motion and universal gravitation.</span></p>
+            <p id="industrial-revolution"><span class="year" data-fr="~1760">~1760</span><span class="event" data-fr="<a href=&quot;https://en.wikipedia.org/wiki/Industrial_Revolution&quot;>Révolution industrielle</a> — puissance de la vapeur, production mécanisée et début d'une croissance économique exponentielle soutenue."><a href="https://en.wikipedia.org/wiki/Industrial_Revolution">Industrial Revolution</a> — steam power, mechanized production, and the beginning of sustained exponential economic growth.</span></p>
+            <p id="starship"><span class="year">2023</span><span class="event" data-fr="<a href=&quot;https://en.wikipedia.org/wiki/Starship_flight_test_1&quot;>Premier vol de SpaceX Starship</a> — une fusée réutilisable conçue pour rendre le voyage vers Mars abordable et l'humanité multi-planétaire."><a href="https://en.wikipedia.org/wiki/Starship_flight_test_1">First flight of SpaceX Starship</a> — a reusable rocket built to make Mars travel affordable and humanity multi-planetary.</span></p>
         </section>
 
     </main>
+    <script src="i18n.js"></script>
 </body>
 
 <!-- Google tag (gtag.js) -->

@@ -118,43 +118,49 @@
         }
     </style>
 </head>
+<!--
+    i18n: every translatable element carries a `data-fr` attribute with its
+    French innerHTML. When editing English text, ALSO update `data-fr`.
+    Organization names stay original.
+-->
 <body>
     <main class="container">
         <header>
             <nav class="nav-links">
-                <a href="index.html">← Back to Home</a>
+                <a href="index.html" data-fr="← Retour à l'accueil">← Back to Home</a>
             </nav>
-            <h1 class="name">Favorite Organizations</h1>
+            <h1 class="name" data-fr="Organisations Favorites">Favorite Organizations</h1>
         </header>
 
         <nav class="org-toc" aria-label="Organization sections">
-            <div class="org-toc-label">On this page</div>
+            <div class="org-toc-label" data-fr="Sur cette page">On this page</div>
             <ul>
-                <li><a href="#companies">Companies</a></li>
-                <li><a href="#organizations">Organizations</a></li>
+                <li><a href="#companies" data-fr="Entreprises">Companies</a></li>
+                <li><a href="#organizations" data-fr="Organisations">Organizations</a></li>
             </ul>
         </nav>
 
         <section class="people">
-            <h2 class="org-topic" id="companies">Companies</h2>
-            <p><a href="https://neuralink.com/">Neuralink</a>: Direct read/write to the cortex, increase bandwidth to the brain</p>
-            <p><a href="https://www.spacex.com/">SpaceX</a>: Making humanity multi-planetary</p>
-            <p><a href="https://www.anduril.com/">Anduril</a>: Rebuilding the Western defense industrial base</p>
-            <p><a href="https://openai.com/">OpenAI</a> / <a href="https://deepmind.google/">DeepMind</a> / <a href="https://www.anthropic.com/">Anthropic</a> / <a href="https://x.ai/">xAI</a>: Artificial general intelligence</p>
-            <p><a href="https://www.helionenergy.com/">Helion Energy</a>: Commercial fusion power</p>
-            <p><a href="https://www.starcloud.com/">Starcloud</a>: Putting data centers in Earth's orbit</p>
+            <h2 class="org-topic" id="companies" data-fr="Entreprises">Companies</h2>
+            <p><a href="https://neuralink.com/">Neuralink</a>: <span data-fr="Lecture/écriture directes du cortex, augmenter la bande passante avec le cerveau">Direct read/write to the cortex, increase bandwidth to the brain</span></p>
+            <p><a href="https://www.spacex.com/">SpaceX</a>: <span data-fr="Rendre l'humanité multi-planétaire">Making humanity multi-planetary</span></p>
+            <p><a href="https://www.anduril.com/">Anduril</a>: <span data-fr="Reconstruire la base industrielle de défense occidentale">Rebuilding the Western defense industrial base</span></p>
+            <p><a href="https://openai.com/">OpenAI</a> / <a href="https://deepmind.google/">DeepMind</a> / <a href="https://www.anthropic.com/">Anthropic</a> / <a href="https://x.ai/">xAI</a>: <span data-fr="Intelligence artificielle générale">Artificial general intelligence</span></p>
+            <p><a href="https://www.helionenergy.com/">Helion Energy</a>: <span data-fr="Énergie de fusion commerciale">Commercial fusion power</span></p>
+            <p><a href="https://www.starcloud.com/">Starcloud</a>: <span data-fr="Mettre des data centers en orbite terrestre">Putting data centers in Earth's orbit</span></p>
 
-            <h2 class="org-topic" id="organizations">Organizations</h2>
-            <p><a href="https://futureoflife.org/our-mission/">Future of Life Institute</a>: Steering transformative technology towards benefiting life</p>
-            <p><a href="https://www.khanacademy.org/">Khan Academy</a>: A free, world-class education for anyone, anywhere</p>
-            <p><a href="https://en.wikipedia.org/wiki/Manhattan_Project">Manhattan Project</a>: Mobilizing the greatest scientific minds toward a civilization-defining goal</p>
-            <p><a href="https://www.muskfoundation.org/">Musk Foundation</a>: Public philanthropy for science, engineering, and the development of artificial intelligence</p>
-            <p><a href="https://www.nasa.gov/">NASA</a>: Space exploration and expanding humanity's presence beyond Earth</p>
-            <p><a href="https://home.cern/">CERN</a>: Probing the fundamental structure of the universe</p>
-            <p><a href="https://www.nato.int/">NATO</a>: Collective defense of the Euro-Atlantic alliance</p>
+            <h2 class="org-topic" id="organizations" data-fr="Organisations">Organizations</h2>
+            <p><a href="https://futureoflife.org/our-mission/">Future of Life Institute</a>: <span data-fr="Orienter les technologies transformatrices au bénéfice de la vie">Steering transformative technology towards benefiting life</span></p>
+            <p><a href="https://www.khanacademy.org/">Khan Academy</a>: <span data-fr="Une éducation gratuite, de niveau mondial, pour toutes et tous, partout">A free, world-class education for anyone, anywhere</span></p>
+            <p><a href="https://en.wikipedia.org/wiki/Manhattan_Project">Manhattan Project</a>: <span data-fr="Mobiliser les plus grands esprits scientifiques autour d'un objectif définissant une civilisation">Mobilizing the greatest scientific minds toward a civilization-defining goal</span></p>
+            <p><a href="https://www.muskfoundation.org/">Musk Foundation</a>: <span data-fr="Philanthropie publique pour la science, l'ingénierie et le développement de l'intelligence artificielle">Public philanthropy for science, engineering, and the development of artificial intelligence</span></p>
+            <p><a href="https://www.nasa.gov/">NASA</a>: <span data-fr="Exploration spatiale et extension de la présence humaine au-delà de la Terre">Space exploration and expanding humanity's presence beyond Earth</span></p>
+            <p><a href="https://home.cern/">CERN</a>: <span data-fr="Sonder la structure fondamentale de l'univers">Probing the fundamental structure of the universe</span></p>
+            <p><a href="https://www.nato.int/">NATO</a>: <span data-fr="Défense collective de l'alliance euro-atlantique">Collective defense of the Euro-Atlantic alliance</span></p>
         </section>
 
     </main>
+    <script src="i18n.js"></script>
 </body>
 
 <script>

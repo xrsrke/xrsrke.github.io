@@ -169,28 +169,33 @@
         }
     </style>
 </head>
+<!--
+    i18n: only nav / page title / section headings translate here.
+    Quote bodies and attributions stay ORIGINAL (per user preference).
+    When editing English UI text, ALSO update `data-fr` on the same element.
+-->
 <body>
     <main class="container">
         <header>
             <nav class="nav-links">
-                <a href="index.html">← Back to Home</a>
+                <a href="index.html" data-fr="← Retour à l'accueil">← Back to Home</a>
             </nav>
-            <h1 class="name">Quotes</h1>
+            <h1 class="name" data-fr="Citations">Quotes</h1>
         </header>
 
         <nav class="quotes-toc" aria-label="Quote topics">
-            <div class="quotes-toc-label">On this page</div>
+            <div class="quotes-toc-label" data-fr="Sur cette page">On this page</div>
             <ul>
-                <li><a href="#success">Success</a></li>
-                <li><a href="#human-performance">Human Performance</a></li>
-                <li><a href="#history">History</a></li>
-                <li><a href="#technology">Technology</a></li>
-                <li><a href="#artificial-intelligence">Artificial Intelligence</a></li>
+                <li><a href="#success" data-fr="Réussite">Success</a></li>
+                <li><a href="#human-performance" data-fr="Performance humaine">Human Performance</a></li>
+                <li><a href="#history" data-fr="Histoire">History</a></li>
+                <li><a href="#technology" data-fr="Technologie">Technology</a></li>
+                <li><a href="#artificial-intelligence" data-fr="Intelligence artificielle">Artificial Intelligence</a></li>
             </ul>
         </nav>
 
         <section class="quotes">
-            <h2 class="quote-topic" id="success">Success</h2>
+            <h2 class="quote-topic" id="success" data-fr="Réussite">Success</h2>
 
             <figure class="quote">
                 <p class="quote-body">"I operate on the physics approach to analysis. You boil things down to the first principles or fundamental truths in a particular area and then you reason up from there."</p>
@@ -312,7 +317,7 @@
                 <figcaption class="quote-attr"><a href="https://x.com/Dkirtley/status/2076822497459408899">David Kirtley</a></figcaption>
             </figure>
 
-            <h2 class="quote-topic" id="human-performance">Human Performance</h2>
+            <h2 class="quote-topic" id="human-performance" data-fr="Performance humaine">Human Performance</h2>
 
             <figure class="quote">
                 <p class="quote-body">"You do not rise to the level of your goals. You fall to the level of your systems."</p>
@@ -354,7 +359,7 @@
                 <figcaption class="quote-attr">Barbara Oakley, A Mind for Numbers: How to Excel at Math and Science</figcaption>
             </figure>
 
-            <h2 class="quote-topic" id="history">History</h2>
+            <h2 class="quote-topic" id="history" data-fr="Histoire">History</h2>
 
             <figure class="quote">
                 <p class="quote-body">"The most important thing to know about prehistoric humans is that they were insignificant animals with no more impact on their environment than gorillas, fireflies or jellyfish."</p>
@@ -366,7 +371,7 @@
                 <figcaption class="quote-attr"><a href="https://cpcglobal.org/publications/Sapiens%20A%20Brief%20History%20of%20Humankind.pdf">Yuval Noah Harari, Sapiens, page 31</a></figcaption>
             </figure>
 
-            <h2 class="quote-topic" id="technology">Technology</h2>
+            <h2 class="quote-topic" id="technology" data-fr="Technologie">Technology</h2>
 
             <figure class="quote">
                 <p class="quote-body">"In the future, a trillion times a trillion dollars will be spent on making antimatter to travel to other star systems."</p>
@@ -394,7 +399,7 @@
                 <figcaption class="quote-attr">Isaac Asimov, <a href="https://en.wikipedia.org/wiki/Three_Laws_of_Robotics">Three Laws of Robotics</a></figcaption>
             </figure>
 
-            <h2 class="quote-topic" id="artificial-intelligence">Artificial Intelligence</h2>
+            <h2 class="quote-topic" id="artificial-intelligence" data-fr="Intelligence artificielle">Artificial Intelligence</h2>
 
             <figure class="quote">
                 <p class="quote-body">"The minds of biological creatures occupy a small corner of a much larger space of possible minds that could be created once we master the technology of artificial intelligence."</p>
@@ -408,6 +413,7 @@
         </section>
 
     </main>
+    <script src="i18n.js"></script>
 </body>
 
 <script>
