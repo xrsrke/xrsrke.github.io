@@ -6,6 +6,29 @@
     <title>Favorite Projects - Phuc Nguyen</title>
     <style>html:not(.loaded){visibility:hidden}</style>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .project-item {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            margin: 0 0 14px 0;
+        }
+        .project-thumb {
+            width: 60px;
+            height: 60px;
+            flex-shrink: 0;
+            object-fit: cover;
+            border-radius: 4px;
+            background: #f5f5f5;
+        }
+        .project-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .project-body p {
+            margin: 0;
+        }
+    </style>
     <script>document.addEventListener('DOMContentLoaded',function(){document.documentElement.classList.add('loaded');});</script>
     <noscript><style>html:not(.loaded){visibility:visible}</style></noscript>
 </head>
@@ -24,11 +47,42 @@
         </header>
 
         <section>
-            <p><a href="https://blog.google/innovation-and-ai/models-and-research/google-research/google-project-suncatcher-facts/">Project Suncatcher</a> - Google Research<br><small><em data-fr="Mettre du matériel accéléré pour l'IA dans l'espace.">Put AI-accelerated hardware in space.</em></small></p>
-            <p><a href="https://www.youtube.com/watch?v=0qo78R_yYFA">Interplanetary Transport System</a> - SpaceX<br><small><em data-fr="Transport économiquement abordable et scalable entre les planètes.">Economically affordable and scalable transportation between planets.</em></small></p>
-            <p><a href="https://www.youtube.com/watch?v=Fo1OiBsWMp0">Earth to Earth Transportation</a> - SpaceX<br><small><em data-fr="Voyager entre deux points quelconques sur Terre en moins de 30 minutes.">Travel between any two points on Earth in less than 30 minutes.</em></small></p>
-            <p><a href="https://www.tomshardware.com/tech-industry/semiconductors/terafab-starts-to-take-shape-100-million-square-feet-of-manufacturing-space-and-usd16-8b-initial-capital-investment">Terafab</a> - Tesla & SpaceX<br><small><em data-fr="La plus grande usine de production de puces au monde, ciblant 1 térawatt de calcul par an — soit environ 50 fois la production combinée de toutes les usines existantes dans le monde.">The largest chip production factory on Earth, targeting 1 terawatt of annual compute — roughly 50× the combined output of all existing global fabs.</em></small></p>
-            <p><a href="https://science.xyz/technologies/biohybrid/">Biohybrid</a> - Science Corporation<br><small><em data-fr="Utiliser des neurones vivants plutôt que des fils pour connecter les interfaces cerveau-machine.">Use living neurons instead of wires to connect brain-computer interfaces.</em></small></p>
+            <div class="project-item">
+                <img src="images/suncatcher.png" alt="Project Suncatcher" class="project-thumb">
+                <div class="project-body">
+                    <p><a href="https://blog.google/innovation-and-ai/models-and-research/google-research/google-project-suncatcher-facts/">Project Suncatcher</a> - Google Research<br><small><em data-fr="Mettre du matériel accéléré pour l'IA dans l'espace.">Put AI-accelerated hardware in space.</em></small></p>
+                </div>
+            </div>
+            <div class="project-item">
+                <img src="images/spacex-its.jpg" alt="SpaceX Interplanetary Transport System" class="project-thumb">
+                <div class="project-body">
+                    <p><a href="https://www.youtube.com/watch?v=0qo78R_yYFA">Interplanetary Transport System</a> - SpaceX<br><small><em data-fr="Transport économiquement abordable et scalable entre les planètes.">Economically affordable and scalable transportation between planets.</em></small></p>
+                </div>
+            </div>
+            <div class="project-item">
+                <img src="images/spacex-earth-to-earth.jpg" alt="SpaceX Earth to Earth transportation" class="project-thumb">
+                <div class="project-body">
+                    <p><a href="https://www.youtube.com/watch?v=Fo1OiBsWMp0">Earth to Earth Transportation</a> - SpaceX<br><small><em data-fr="Voyager entre deux points quelconques sur Terre en moins de 30 minutes.">Travel between any two points on Earth in less than 30 minutes.</em></small></p>
+                </div>
+            </div>
+            <div class="project-item">
+                <img src="images/terafab.jpg" alt="Terafab chip factory rendering" class="project-thumb">
+                <div class="project-body">
+                    <p><a href="https://www.spacex.com/updates/terafab">Terafab</a> - Tesla & SpaceX<br><small><em data-fr="La plus grande usine de production de puces au monde, ciblant 1 térawatt de calcul par an — soit environ 50 fois la production combinée de toutes les usines existantes dans le monde.">The largest chip production factory on Earth, targeting 1 terawatt of annual compute — roughly 50× the combined output of all existing global fabs.</em></small></p>
+                </div>
+            </div>
+            <div class="project-item">
+                <img src="images/biohybrid.jpg" alt="Science Corporation Biohybrid" class="project-thumb">
+                <div class="project-body">
+                    <p><a href="https://science.xyz/technologies/biohybrid/">Biohybrid</a> - Science Corporation<br><small><em data-fr="Utiliser des neurones vivants plutôt que des fils pour connecter les interfaces cerveau-machine.">Use living neurons instead of wires to connect brain-computer interfaces.</em></small></p>
+                </div>
+            </div>
+            <div class="project-item">
+                <img src="images/spacex-lunar-mass-driver.jpg" alt="SpaceX lunar electromagnetic mass driver" class="project-thumb">
+                <div class="project-body">
+                    <p><a href="https://x.com/elonmusk/status/2036299707446861904">Lunar Mass Drivers</a> - SpaceX<br><small><em data-fr="Catapultes électromagnétiques sur la Lune pour lancer des charges utiles vers l'espace sans propergol.">Electromagnetic catapults on the Moon to launch payloads into space without propellant.</em></small></p>
+                </div>
+            </div>
         </section>
 
     </main>
