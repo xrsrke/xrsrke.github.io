@@ -1,3 +1,28 @@
+@font-face {
+    font-family: 'Suisse Intl';
+    src: url('fonts/suisse-intl-book.otf') format('opentype');
+    font-weight: 400;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Suisse Intl';
+    src: url('fonts/suisse-intl-medium.otf') format('opentype');
+    font-weight: 500;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Suisse Intl';
+    src: url('fonts/suisse-intl-semibold.otf') format('opentype');
+    font-weight: 600;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Suisse Intl';
+    src: url('fonts/suisse-intl-bold.otf') format('opentype');
+    font-weight: 700;
+    font-display: swap;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -53,11 +78,14 @@ html {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace;
+    font-family: 'Suisse Intl', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
     line-height: 1.4;
-    color: #000;
+    color: #1d272a;
     background: #fff;
     font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     overflow-x: hidden;
 }
 
@@ -119,7 +147,7 @@ h3 {
 
 p {
     margin-bottom: 16px;
-    color: #333;
+    color: #646464;
 }
 
 .project {
